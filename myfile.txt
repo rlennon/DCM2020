@@ -1,1 +1,2 @@
 Text for the new file named myfile.txt
+Text for the new file named myfile.txt
