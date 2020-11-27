@@ -170,21 +170,22 @@ function Get-UserDetail
     try
     {
         # Get the UserName logged onto the server
+        
         $userName = (Get-WmiObject -Class win32_computersystem -ComputerName $ComputerName).UserName
 
         # Add the server found to the server Array
         $server = [ordered]@{
             ComputerName=$ComputerName
             UserName=$UserName
-        }
+                            }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catcher 
+    catch
     { 
         $server = [ordered]@{
             ComputerName=$computerName
             UserName="(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-        }
+                            }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
     return $serverArray   
@@ -354,10 +355,11 @@ function Check-OpenPorts
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
+        foreach ($ports in $portList)
         {
             
             #BSc DCM 2020 - Fix this
-            # $portConnected =
+            $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -Ports $ports -ErrorAction SilentlyContinue
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
