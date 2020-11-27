@@ -80,7 +80,6 @@ function Test-Network
     $errorOutputArray = @()
     $networkInformationArray = @()
     $checkOpenPortsArray = @()
-
     # Ports to check
     $portList = $settings.PortsToValidate.Split(",") # Split the sitring into a an array
 
@@ -96,10 +95,10 @@ function Test-Network
 
     # Start Process
     Foreach ($computerName in $computerNames)
-    {
+        {
         # Test the connection to the ComputerName or Ip Address Given
         if (Test-Connection -ComputerName $computerName -Count 1 -Quiet)
-        { 
+            { 
                 # Get User Logged onto the server
                 $serverArray += Get-UserDetail $computerName
 
@@ -111,14 +110,15 @@ function Test-Network
 
                 # Check for open ports as per list given
                 $checkOpenPortsArray += Get-OpenPorts $computerName $portList
-      
-        } else {
+            } 
+    else 
+            {
         $server = [ordered]@{
         ComputerName=$computerName
-        UserName="Remote Server Not Available"   }
+        UserName="Remote Server Not Available"  }
             $serverArray += New-Object -TypeName PSObject -Property $server
-        }
-    } # bottom of foreach loop
+            }
+        } # bottom of foreach loop
     }
     End
     {
@@ -171,13 +171,13 @@ function Get-UserDetail
     {
         # Get the UserName logged onto the server
         
-        $userName = (Get-WmiObject -Class win32_computersystem -ComputerName $ComputerName).UserName
+        $userName = (Get-CimInstance -Class win32_computersystem -ComputerName $ComputerName).UserName
 
         # Add the server found to the server Array
         $server = [ordered]@{
             ComputerName=$ComputerName
             UserName=$UserName
-                            }
+        }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
     catch
@@ -185,7 +185,7 @@ function Get-UserDetail
         $server = [ordered]@{
             ComputerName=$computerName
             UserName="(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-                            }
+        }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
     return $serverArray   
@@ -222,7 +222,7 @@ function Get-WarningsErrors
     try
     {
         # Check if any security errors or warning was log to the eventlog
-        $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
+        $EventLogTest = Get-WinEvent -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
         If ($EventLogTest -notmatch $null)
@@ -286,9 +286,7 @@ function Get-NetworkInfo
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
         )
-
     $networkInformationArray = @()
-
     try
     {
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
@@ -300,7 +298,8 @@ function Get-NetworkInfo
                     SourceAddress=$networkInfo.SourceAddress
                     NetRoute=$networkInfo.NetRoute
                     PingSucceeded=$networkInfo.PingSucceeded
-                    PingReplyDetails=$networkInfo.PingReplyDetails }
+                    PingReplyDetails=$networkInfo.PingReplyDetails 
+        }
                     $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
     catch 
@@ -314,10 +313,10 @@ function Get-NetworkInfo
                     SourceAddress=""
                     NetRoute=""
                     PingSucceeded=""
-                    PingReplyDetails="" }
+                    PingReplyDetails="" 
+        }
                     $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
-
     return $networkInformationArray   
 }
 #endregion
@@ -357,7 +356,6 @@ function Get-OpenPorts
         # Write in the single line of code to iterate through the port list
         foreach ($ports in $portList)
         {
-            
             #BSc DCM 2020 - Fix this
             $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -Ports $ports -ErrorAction SilentlyContinue
             # finish the above line of code using the Test-NetConnection command and then uncomment.
@@ -378,7 +376,7 @@ function Get-OpenPorts
                 ComputerName=$ComputerName
                 Port=$port
                 Open="(Get-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-            }
+        }
             $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
     return $checkOpenPortsArray   
