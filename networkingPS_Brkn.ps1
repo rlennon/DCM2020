@@ -33,7 +33,7 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
    created domain environment configured using VMWare, using a Windows 2019 server running Active Directory 
    connecting to a Window 10 personal computer. 
    
-   The main function, called Network-Tests, accepts the list of servers from the IPAddresses.txt file and calls 
+   The main function, called Test-Network, accepts the list of servers from the IPAddresses.txt file and calls 
    other functions to execute each task individually. This method ensures each function executes independently 
    and consist of its internal exception handling. The script will continue to run, even If one remote server 
    incorrectly configured or an exception thrown for one or more commands executed. 
@@ -52,9 +52,9 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
-Network-Tests $computerNames
+Test-Network $computerNames
 
-#Region Network-Tests
+#Region Test-Network
 <# 
 .Synopsis
    Main Function doing network tests. 
@@ -65,7 +65,7 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Network-Tests
+function Test-Network
 {
     Param(
      [Parameter()]
@@ -104,13 +104,13 @@ function Network-Tests
                 $serverArray += Get-UserDetail $computerName
 
                 # Check if any security errors or warning was log to the eventlog
-                $errorOutputArray += Check-WarningsErrors $computerName
+                $errorOutputArray += Get-WarningsErrors $computerName
 
                 # Get Network Information
                 $networkInformationArray += Get-NetworkInfo $computerName
 
                 # Check for open ports as per list given
-                $checkOpenPortsArray += Check-OpenPorts $computerName $portList
+                $checkOpenPortsArray += Get-OpenPorts $computerName $portList
       
         } else {
         $server = [ordered]@{
@@ -193,7 +193,7 @@ function Get-UserDetail
 }
 #endRegion
 
-#Region Check-warningsErrors
+#Region Get-warningsErrors
 <#
 .Synopsis
    Check for warnings or errors 
@@ -203,7 +203,7 @@ function Get-UserDetail
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors
+function Get-WarningsErrors
 {
     [CmdletBinding()]
     [Alias()]
@@ -225,7 +225,7 @@ function Check-WarningsErrors
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($EventLogTest -ne $null)
+        If ($EventLogTest -notmatch $null)
         {
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest)
@@ -258,7 +258,7 @@ function Check-WarningsErrors
                 ComputerName=$ComputerName
                 EntryType = "" ;  Index = "" ; Source = ""
                 InstanceID = ""
-                Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
+                Message = "(Get-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
 
     }
@@ -322,7 +322,7 @@ function Get-NetworkInfo
 }
 #endregion
 
-#Region Check-OpenPorts
+#Region Get-OpenPorts
 <#
 .Synopsis
     Get Open Port List 
@@ -335,8 +335,8 @@ function Get-NetworkInfo
 
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
-# check-openports function shown below.
-function Check-OpenPorts
+# Get-openports function shown below.
+function Get-OpenPorts
 {
     [CmdletBinding()]
     [Alias()]
@@ -377,7 +377,7 @@ function Check-OpenPorts
         $ports = [ordered]@{
                 ComputerName=$ComputerName
                 Port=$port
-                Open="(Check-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+                Open="(Get-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
             }
             $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
