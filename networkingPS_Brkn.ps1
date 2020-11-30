@@ -7,7 +7,7 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
   This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
       The following needs to be configured on each server
          1. Run Enable-PSRemoting
-       2. Windows Remote Management (HTTP-In) needs to be enables. use New-NetFirewallRule to set the firewall rules.
+         2. Windows Remote Management (HTTP-In) needs to be enables. use New-NetFirewallRule to set the firewall rules.
          3. Configure WinRM and allow your client PC as a TrustedHost
          4. Run Test-WsMan ComputerName to test if WinRM is correctly setup
 
@@ -65,7 +65,7 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Network-Tests {
+function Testing-Network { # Name of the funcion changed AG!!!
     Param(
         [Parameter()]
         [string[]]
@@ -84,10 +84,11 @@ function Network-Tests {
 
         # Start to write to the Log File. All output will be written in the Log File
         Start-Transcript -Path $settings.Get_Item("LogFile")
-    }    Process {
+    }    
+    Process {
         #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
         #Which command should I use?
-        #  Write-Output $computerNames  
+        Write-Output $computerNames  # Write-Output writes to pipeline, and Write-Host writes to the console so in this case Write-Output is the correct option AG!!!  
         #  Write-Host $computerNames
         # Uncomment the correct one of the above choices!
 
@@ -124,7 +125,6 @@ function Network-Tests {
         Write-Output "*   Servers Information"
         "*" * 50
         $serverArray | Format-Table -AutoSize
-
         "*" * 50
         Write-Output "*   EventLog - Errors and Warnings"
         "*" * 50
