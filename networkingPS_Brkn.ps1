@@ -270,6 +270,7 @@ function Get-NetworkInfo {
     [Alias()]
     [OutputType([array])]
     Param(
+        $ComputerName  # parameter added AG!!!
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
     )
@@ -320,7 +321,7 @@ function Get-NetworkInfo {
 
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
-# check-openports function shown below.
+# Check-OpenPorts function shown below.
 function Check-OpenPorts {
     [CmdletBinding()]
     [Alias()]
