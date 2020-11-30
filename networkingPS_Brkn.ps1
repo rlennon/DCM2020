@@ -153,7 +153,7 @@ function Testing-Network { # Name of the funcion changed AG!!!
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-UserDetail {
+function Get-UserDetails { # Name modifies 's' added AG!!!
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -177,12 +177,11 @@ function Get-UserDetail {
     catch { 
         $server = [ordered]@{
             ComputerName = $computerName
-            UserName     = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
+            UserName = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    return $serverArray   
-    
+    return $serverArray    
 }
 #endRegion
 
@@ -251,10 +250,8 @@ function Check-WarningsErrors {
             Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId 
         }
         $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
-
     }
     return $errorOutputArray   
-    
 }
 #endregion
 
