@@ -52,7 +52,7 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 Get-Content ".\Settings.ini" | foreach-object -begin { $settings = @{} } -process { $k = [regex]::split($_, '='); if (($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
-Network-Tests $computerNames
+Test-Network $ComputerNames  # variable name starting with capital C  AG!!!
 
 #Region Network-Tests
 <# 
@@ -65,14 +65,14 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Testing-Network { # Name of the funcion changed AG!!!
+function Test-Network { # Name of the funcion changed AG!!!
     Param(
         [Parameter()]
         [string[]]
         $ServerNames)
 
     Begin {
-        $computerNames = $ServerNames
+        $ComputerNames = $ServerNames # variable name starting with capital C  AG!!!
         # Creating objects to be used
         $serverArray = @()
         $errorOutputArray = @()
@@ -153,7 +153,7 @@ function Testing-Network { # Name of the funcion changed AG!!!
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-UserDetails { # Name modifies 's' added AG!!!
+function Get-UserDetails { # Name modified 's' added AG!!!
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -170,7 +170,7 @@ function Get-UserDetails { # Name modifies 's' added AG!!!
         # Add the server found to the server Array
         $server = [ordered]@{
             ComputerName = $ComputerName
-            UserName     = $UserName
+            UserName = $UserName
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
@@ -195,7 +195,7 @@ function Get-UserDetails { # Name modifies 's' added AG!!!
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors {
+function Get-WarningsErrors { # CHANGET THE NAME TO GET SO THERE IS APPROVED NAME FOR PS NAMES  AG!!!
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -215,7 +215,7 @@ function Check-WarningsErrors {
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object { $_.EntryType -like 'Error' -or $_.EntryType -like 'Warning' }
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($EventLogTest -ne $null) {
+        If ($EventLogTest -ne $null) {  #NOT SURE ABOUT THIS LINE AG!!!
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest) {
                 $errorOutput = [ordered]@{
@@ -342,7 +342,7 @@ function Check-OpenPorts {
         {
             
             #BSc DCM 2020 - Fix this
-            # $portConnected =
+            # $portConnected = # NOT SURE ABOUT THIS LINE AG!!!
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
