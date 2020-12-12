@@ -333,7 +333,7 @@ function Get-NetworkInfo
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # check-openports function shown below.
-function Check-OpenPorts
+function Test-openport
 {
     [CmdletBinding()]
     [Alias()]
