@@ -68,7 +68,7 @@ Network-Tests $computerNames
 function Test-network
 {
     Param(
-     [Parameter()]
+            [Parameter()]
         [string[]]
         $ServerNames)
 
@@ -224,7 +224,7 @@ function get-winevent
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($EventLogTest -ne $null)
+        If ($Get-WinEvent -ne $null)
         {
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest)
