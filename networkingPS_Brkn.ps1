@@ -1,4 +1,4 @@
-<#
+		<#
 .Synopsis
 Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 
@@ -67,9 +67,8 @@ Network-Tests $computerNames
 #>
 function Network-Tests
 {
-    Param
-	(
-     [Parameter()]
+    Param(
+    [Parameter()]
         [string[]]
         $ServerNames)
 
