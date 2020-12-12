@@ -65,7 +65,7 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Network-Tests
+function Test-network
 {
     Param(
      [Parameter()]
@@ -202,7 +202,7 @@ function Get-UserDetail
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors
+function get-winevent
 {
     [CmdletBinding()]
     [Alias()]
