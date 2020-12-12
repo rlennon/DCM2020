@@ -67,7 +67,8 @@ Network-Tests $computerNames
 #>
 function Network-Tests
 {
-    Param(
+    Param
+	(
      [Parameter()]
         [string[]]
         $ServerNames)
