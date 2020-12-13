@@ -218,26 +218,26 @@ function get-winevent
 
     $errorOutputArray = @()
     try
-{
+    {
         # Check if any security errors or warning was log to the eventlog
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($Get-WinEvent -new $null)
-        {   # If Warnings or Errors found, then write it out to the log file
-            Foreach ($eventLog in $EventLogTest){
+        If ($EventLogTest -notcontains $null)
+        {   
+            # If Warnings or Errors found, then write it out to the log file
+            Foreach ($eventLog in $EventLogTest)
+            {
                 $errorOutput = [ordered]@{
                     ComputerName=$ComputerName
                     EntryType = $eventLog.EntryType
                     Index = $eventLog.Index 
                     Source = $eventLog.Source
                     InstanceID = $eventLog.InstanceID
-                    Message = $eventLog.Message 
-                }
-                $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput}
+                    Message = $eventLog.Message }
+                $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
         }
-}
-    else
+    }else
     {
         {
             # If no errors where found
@@ -358,7 +358,7 @@ function Get-openport
         foreach ($port in $PortList)
         {
             #BSc DCM 2020 - Fix this
-            $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerNames -Port $PortList
+            $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerNames -Port $Port -ErrorAction SilentlyContinue
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
