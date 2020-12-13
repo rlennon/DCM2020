@@ -236,8 +236,10 @@ function get-winevent
                     InstanceID = $eventLog.InstanceID
                     Message = $eventLog.Message }
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
+            }
         }
-    }else
+    }
+    else
     {
         {
             # If no errors where found
@@ -383,4 +385,3 @@ function Get-openport
     return $checkOpenPortsArray   
 }
 #endregion
-
