@@ -1,11 +1,11 @@
 <#
-.Synopsis
+.SYNOPSIS
 	Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
-
+	
 .DESCRIPTION
 
 	This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
-    The following needs to be configured on each server
+	The following needs to be configured on each server
        1. Run Enable-PSRemoting
        2. Windows Remote Management (HTTP-In) needs to be enables. use New-NetFirewallRule to set the firewall rules.
        3. Configure WinRM and allow your client PC as a TrustedHost
@@ -37,8 +37,7 @@
 	other functions to execute each task individually. This method ensures each function executes independently 
 	and consist of its internal exception handling. The script will continue to run, even If one remote server 
 	incorrectly configured or an exception thrown for one or more commands executed. 
-        
-
+      
 .EXAMPLE
 	Another example of how to use this cmdlet when using multiple servers
 	  . .\NetworkTests.ps1
@@ -56,7 +55,7 @@ Network-Tests $computerNames
 
 #Region Network-Tests
 <# 
-.Synopsis
+.SYNOPSIS
 	Main Function doing network tests. 
 
 .DESCRIPTION
