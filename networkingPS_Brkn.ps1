@@ -92,7 +92,7 @@ function Test-network
     Get-Process
         #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
         #Which command should I use?
-        #  Write-Output $computerNames  
+        Write-Output $computerNames  
         #  Write-Host $computerNames
         # Uncomment the correct one of the above choices!
 
@@ -281,8 +281,9 @@ function Get-NetworkInfo
     [Alias()]
     [OutputType([array])]
     Param(
-        #BSC DCM students 2020 - fix this
-        #a parameter should be added here for the string variable named ComputerName
+        [Parameter()]
+        [string]
+        $ComputerName
         )
 
     $networkInformationArray = @()
@@ -323,16 +324,19 @@ function Get-NetworkInfo
 #Region Check-OpenPorts
 <#
 .Synopsis
+    Test for open ports.
    
 .DESCRIPTION
+    This function will check for any open ports
    
-.PARAMETERS    
+.PARAMETERS 
+    $ComputerName: A Valid Computer Name or IP Address
 #>
 
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # check-openports function shown below.
-function Test-openport
+function Get-openport
 {
     [CmdletBinding()]
     [Alias()]
@@ -351,10 +355,10 @@ function Test-openport
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
+        foreach ($port in $PortList)
         {
-            
             #BSc DCM 2020 - Fix this
-            # $portConnected =
+            $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerNames -Port $PortList
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
