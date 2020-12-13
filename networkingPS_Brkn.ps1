@@ -3,7 +3,6 @@
 	Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 	
 .DESCRIPTION
-
 	This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
 	The following needs to be configured on each server
        1. Run Enable-PSRemoting
