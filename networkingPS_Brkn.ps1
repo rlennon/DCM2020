@@ -57,13 +57,13 @@ Network-Tests $computerNames
 #Region Network-Tests
 <# 
 .Synopsis
-   Main Function doing network tests. 
+	Main Function doing network tests. 
 
 .DESCRIPTION
-   This function will call all the other functions to carry out network tests.
+	This function will call all the other functions to carry out network tests.
 
 .PARAMETERS
-   $ServerNames: Pass a list of server names as String Array
+	$ServerNames: Pass a list of server names as String Array
 #>
 function Network-Tests
 {
