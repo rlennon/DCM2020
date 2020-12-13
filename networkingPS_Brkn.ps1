@@ -67,26 +67,28 @@ Network-Tests $computerNames
 #>
 function Test-network
 {
-    Param(
-            [Parameter()]
-        [string[]]
-        $ServerNames)
-
+    Param
+    {
+        [Parameter]
+        [string[]
+        $ServerNames
+    }
     Begin
     {
-    $computerNames = $ServerNames
-    # Creating objects to be used
-    $serverArray = @()
-    $errorOutputArray = @()
-    $networkInformationArray = @()
-    $checkOpenPortsArray = @()
+        $computerNames = $ServerNames
+        # Creating objects to be used
+        $serverArray = @()
+        $errorOutputArray = @()
+        $networkInformationArray = @()
+        $checkOpenPortsArray = @()
 
-    # Ports to check
-    $portList = $settings.PortsToValidate.Split(",") # Split the sitring into a an array
+        # Ports to check
+        $portList = $settings.PortsToValidate.Split(",") # Split the sitring into a an array
 
-    # Start to write to the Log File. All output will be written in the Log File
-    Start-Transcript -Path $settings.Get_Item("LogFile")
-    }    Process
+        # Start to write to the Log File. All output will be written in the Log File
+        Start-Transcript -Path $settings.Get_Item("LogFile")
+    }    
+    Get-Process
     {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
     #Which command should I use?
     #  Write-Output $computerNames  
@@ -98,50 +100,49 @@ function Test-network
     Foreach ($computerName in $computerNames)
     {
         # Test the connection to the ComputerName or Ip Address Given
-        if (Test-Connection -ComputerName $computerName -Count 1 -Quiet)
+        if (Test-NetConnection -ComputerName $computerName -Count 1 -Quiet)
         { 
-                # Get User Logged onto the server
-                $serverArray += Get-UserDetail $computerName
+            # Get User Logged onto the server
+            $serverArray += Get-UserDetail $computerName
 
-                # Check if any security errors or warning was log to the eventlog
-                $errorOutputArray += Check-WarningsErrors $computerName
+            # Check if any security errors or warning was log to the eventlog
+            $errorOutputArray += Check-WarningsErrors $computerName
 
-                # Get Network Information
-                $networkInformationArray += Get-NetworkInfo $computerName
+            # Get Network Information
+            $networkInformationArray += Get-NetworkInfo $computerName
 
-                # Check for open ports as per list given
-                $checkOpenPortsArray += Check-OpenPorts $computerName $portList
+            # Check for open ports as per list given
+            $checkOpenPortsArray += Check-OpenPorts $computerName $portList
       
-        } else {
-        $server = [ordered]@{
-        ComputerName=$computerName
-        UserName="Remote Server Not Available"   }
-            $serverArray += New-Object -TypeName PSObject -Property $server
+        } 
+        else 
+        {
+            $server = [ordered]@{
+            ComputerName=$computerName
+            UserName="Remote Server Not Available"   
         }
+            $serverArray += New-Object -TypeName PSObject -Property $server
     } # bottom of foreach loop
-    }
     End
     {
-    # Printing all the objects
-    "*" * 50
-    Write-Output "*   Servers Information"
-    "*" * 50
-    $serverArray | Format-Table -AutoSize
-
-    "*" * 50
-    Write-Output "*   EventLog - Errors and Warnings"
-    "*" * 50
-    $errorOutputArray | Format-Table -AutoSize
-    "*" * 50
-    Write-Output "*   Network Information"
-    "*" * 50
-    $networkInformationArray | Format-Table -AutoSize
-    "*" * 50
-    Write-Output "*   Open Ports"
-    "*" * 50
-    $checkOpenPortsArray | Format-Table -AutoSize
-
-    Stop-Transcript
+        # Printing all the objects
+        "*" * 50
+        Write-Output "*   Servers Information"
+        "*" * 50
+        $serverArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   EventLog - Errors and Warnings"
+        "*" * 50
+        $errorOutputArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   Network Information"
+        "*" * 50
+        $networkInformationArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   Open Ports"
+        "*" * 50
+        $checkOpenPortsArray | Format-Table -AutoSize
+        Stop-Transcript
     }
 }
 #endregion
@@ -161,10 +162,11 @@ function Get-UserDetail
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
-    Param(
-        [Parameter()]
-        [string]
-        $ComputerName
+    Param
+        (
+            [Parameter()]
+            [string]
+            $ComputerName
         )
     $serverArray = @()
     try
@@ -212,7 +214,7 @@ function get-winevent
         [string]
         $ComputerName
         )
-
+}
     # Date before and after to check 24 hours worth of data
     $DateBefore = (Get-Date)
     $DateAfter = (Get-Date).AddDays(-1)
@@ -224,7 +226,7 @@ function get-winevent
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($Get-WinEvent -ne $null)
+        If ($Get-WinEvent -new $null)
         {
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest)
@@ -251,6 +253,7 @@ function get-winevent
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
         }
     }
+
     catch 
     { 
         $errorOutput = [ordered]@{
