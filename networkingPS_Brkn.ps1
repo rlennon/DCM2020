@@ -70,7 +70,7 @@ function Test-network
     Param
     {
         [Parameter]
-        [string[]
+        [string]
         $ServerNames
     }
     Begin
@@ -87,33 +87,30 @@ function Test-network
 
         # Start to write to the Log File. All output will be written in the Log File
         Start-Transcript -Path $settings.Get_Item("LogFile")
-    }    
+    }
+}    
     Get-Process
-    {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
-    #Which command should I use?
-    #  Write-Output $computerNames  
-    #  Write-Host $computerNames
-    # Uncomment the correct one of the above choices!
+        #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
+        #Which command should I use?
+        #  Write-Output $computerNames  
+        #  Write-Host $computerNames
+        # Uncomment the correct one of the above choices!
 
 
-    # Start Process
-    Foreach ($computerName in $computerNames)
+        # Start Process
+        Foreach ($computerName in $computerNames)
     {
         # Test the connection to the ComputerName or Ip Address Given
         if (Test-NetConnection -ComputerName $computerName -Count 1 -Quiet)
         { 
             # Get User Logged onto the server
             $serverArray += Get-UserDetail $computerName
-
             # Check if any security errors or warning was log to the eventlog
             $errorOutputArray += Check-WarningsErrors $computerName
-
             # Get Network Information
             $networkInformationArray += Get-NetworkInfo $computerName
-
             # Check for open ports as per list given
             $checkOpenPortsArray += Check-OpenPorts $computerName $portList
-      
         } 
         else 
         {
@@ -121,8 +118,9 @@ function Test-network
             ComputerName=$computerName
             UserName="Remote Server Not Available"   
         }
-            $serverArray += New-Object -TypeName PSObject -Property $server
-    } # bottom of foreach loop
+    $serverArray += New-Object -TypeName PSObject -Property $server
+    } 
+    # bottom of foreach loop
     End
     {
         # Printing all the objects
@@ -153,7 +151,6 @@ function Test-network
    Get User Detail
 .DESCRIPTION
    This function will get the current user logged onto the server.
-
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
@@ -164,7 +161,7 @@ function Get-UserDetail
     [OutputType([array])]
     Param
         (
-            [Parameter()]
+            [Param()]
             [string]
             $ComputerName
         )
@@ -200,7 +197,6 @@ function Get-UserDetail
    Check for warnings or errors 
 .DESCRIPTION
    This function will check if any warnings or errors is on the server EventLog
-
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
@@ -209,7 +205,8 @@ function get-winevent
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
-    Param(
+    Param
+        (
         [Parameter()]
         [string]
         $ComputerName
@@ -221,26 +218,27 @@ function get-winevent
 
     $errorOutputArray = @()
     try
-    {
+{
         # Check if any security errors or warning was log to the eventlog
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
         If ($Get-WinEvent -new $null)
-        {
-            # If Warnings or Errors found, then write it out to the log file
-            Foreach ($eventLog in $EventLogTest)
-            {
+        {   # If Warnings or Errors found, then write it out to the log file
+            Foreach ($eventLog in $EventLogTest){
                 $errorOutput = [ordered]@{
                     ComputerName=$ComputerName
                     EntryType = $eventLog.EntryType
                     Index = $eventLog.Index 
                     Source = $eventLog.Source
                     InstanceID = $eventLog.InstanceID
-                    Message = $eventLog.Message }
-                    $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
-            }
-        }else
+                    Message = $eventLog.Message 
+                }
+                $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput}
+        }
+}
+    else
+    {
         {
             # If no errors where found
                 $errorOutput = [ordered]@{
@@ -260,13 +258,11 @@ function get-winevent
                 ComputerName=$ComputerName
                 EntryType = "" ;  Index = "" ; Source = ""
                 InstanceID = ""
-                Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
+                Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId 
+            }
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
-
     }
     return $errorOutputArray   
-    
-}
 #endregion
 
 #Region Get-NetworkInfo
@@ -294,30 +290,30 @@ function Get-NetworkInfo
     try
     {
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress=$networkInfo.RemoteAddress
-                    NameResolutionResults=$networkInfo.NameResolutionResults
-                    InterfaceAlias=$networkInfo.InterfaceAlias
-                    SourceAddress=$networkInfo.SourceAddress
-                    NetRoute=$networkInfo.NetRoute
-                    PingSucceeded=$networkInfo.PingSucceeded
-                    PingReplyDetails=$networkInfo.PingReplyDetails }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+        $networkInfoOutput = [ordered]@{
+            ComputerName=$networkInfo.ComputerName
+            RemoteAddress=$networkInfo.RemoteAddress
+            NameResolutionResults=$networkInfo.NameResolutionResults
+            InterfaceAlias=$networkInfo.InterfaceAlias
+            SourceAddress=$networkInfo.SourceAddress
+            NetRoute=$networkInfo.NetRoute
+            PingSucceeded=$networkInfo.PingSucceeded
+            PingReplyDetails=$networkInfo.PingReplyDetails }
+            $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
     catch 
     { 
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress="(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-                    NameResolutionResults=""
-                    InterfaceAlias=""
-                    SourceAddress=""
-                    NetRoute=""
-                    PingSucceeded=""
-                    PingReplyDetails="" }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+        $networkInfoOutput = [ordered]@{
+            ComputerName=$networkInfo.ComputerName
+            RemoteAddress="(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+            NameResolutionResults=""
+            InterfaceAlias=""
+            SourceAddress=""
+            NetRoute=""
+            PingSucceeded=""
+            PingReplyDetails="" }
+            $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
 
     return $networkInformationArray   
