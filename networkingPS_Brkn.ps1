@@ -32,8 +32,8 @@
 	created domain environment configured using VMWare, using a Windows 2019 server running Active Directory 
 	connecting to a Window 10 personal computer. 
    
-	The main function, called Network-Tests, accepts the list of servers from the IPAddresses.txt file and calls 
-	other functions to execute each task individually. This method ensures each function executes independently 
+	The main Function, called Network-Tests, accepts the list of servers from the IPAddresses.txt file and calls 
+	other Functions to execute each task individually. This method ensures each Function executes independently 
 	and consist of its internal exception handling. The script will continue to run, even If one remote server 
 	incorrectly configured or an exception thrown for one or more commands executed. 
       
@@ -49,7 +49,7 @@
 
 Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
-#Calling the Main function to carry out network tests
+#Calling the Main Function to carry out network tests
 Network-Tests $computerNames
 
 #Region Network-Tests
@@ -58,12 +58,12 @@ Network-Tests $computerNames
 	Main Function doing network tests. 
 
 .DESCRIPTION
-	This function will call all the other functions to carry out network tests.
+	This Function will call all the other Functions to carry out network tests.
 
 .PARAMETERS
 	$ServerNames: Pass a list of server names as String Array
 #>
-function Network-Tests
+Function Network-Tests
 {
     Param(
     [Parameter()]
@@ -146,15 +146,16 @@ function Network-Tests
 
 #Region Get-UserDetail
 <#
-.Synopsis
+.SYNOPSIS
    Get User Detail
+   
 .DESCRIPTION
-   This function will get the current user logged onto the server.
+   This Function will get the current user logged onto the server.
 
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-UserDetail
+Function Get-UserDetail
 {
     [CmdletBinding()]
     [Alias()]
@@ -192,15 +193,15 @@ function Get-UserDetail
 
 #Region Check-warningsErrors
 <#
-.Synopsis
+.SYNOPSIS
    Check for warnings or errors 
 .DESCRIPTION
-   This function will check if any warnings or errors is on the server EventLog
+   This Function will check if any warnings or errors is on the server EventLog
 
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors
+Function Check-WarningsErrors
 {
     [CmdletBinding()]
     [Alias()]
@@ -266,15 +267,16 @@ function Check-WarningsErrors
 
 #Region Get-NetworkInfo
 <#
-.Synopsis
+.SYNOPSIS
    Get Network Info
+   
 .DESCRIPTION
-   This function will get detailed network information
+   This Function will get detailed network information
 
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-NetworkInfo
+Function Get-NetworkInfo
 {
     [CmdletBinding()]
     [Alias()]
@@ -321,7 +323,7 @@ function Get-NetworkInfo
 
 #Region Check-OpenPorts
 <#
-.Synopsis
+.SYNOPSIS
    
 .DESCRIPTION
    
@@ -330,8 +332,8 @@ function Get-NetworkInfo
 
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
-# check-openports function shown below.
-function Check-OpenPorts
+# check-openports Function shown below.
+Function Check-OpenPorts
 {
     [CmdletBinding()]
     [Alias()]
