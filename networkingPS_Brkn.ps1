@@ -2,6 +2,8 @@
 .Synopsis
 Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 
+First push test
+
 .DESCRIPTION
 
   This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
