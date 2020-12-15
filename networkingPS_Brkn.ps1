@@ -156,8 +156,8 @@ function Network-Tests
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-UserDetail
-{
+#function Get-UserDetail
+#{
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -167,8 +167,8 @@ function Get-UserDetail
         $ComputerName
         )
     $serverArray = @()
-    try
-    {
+    #try
+    #{
         # Get the UserName logged onto the server
         $userName = (Get-WmiObject -Class win32_computersystem -ComputerName $ComputerName).UserName
 
@@ -178,7 +178,7 @@ function Get-UserDetail
             UserName=$UserName
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
-    }
+    #}
     catcher 
     { 
         $server = [ordered]@{
@@ -189,7 +189,7 @@ function Get-UserDetail
     }
     return $serverArray   
     
-}
+#}
 #endRegion
 
 #Region Check-warningsErrors
