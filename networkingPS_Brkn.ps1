@@ -1,19 +1,21 @@
 <#
-.Synopsis
+.SYNOPSIS
+
 Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 
 .DESCRIPTION
 
   This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
-      The following needs to be configured on each server
-         1. Run Enable-PSRemoting
-       2. Windows Remote Management (HTTP-In) needs to be enables. use New-NetFirewallRule to set the firewall rules.
-         3. Configure WinRM and allow your client PC as a TrustedHost
-         4. Run Test-WsMan ComputerName to test if WinRM is correctly setup
+  The following needs to be configured on each server
+    1. Run Enable-PSRemoting
+    2. Windows Remote Management (HTTP-In) needs to be enables. use New-NetFirewallRule to set the firewall rules.
+    3. Configure WinRM and allow your client PC as a TrustedHost
+    4. Run Test-WsMan ComputerName to test if WinRM is correctly setup
 
   NOTE: Please update the IPAddresses.txt file with your own IP addresses or Computer Names, and also ensure that you have the Settings.ini file.
 
 .CONCLUSION
+
    The goal of the script was to execute a list of commands from a central Windows server connecting 
    to multiple remote servers on the same network. The list of commands is testing networks connections, 
    get the current user logged onto the server, check if any security warnings and errors on the server’s 
@@ -179,7 +181,7 @@ function Get-UserDetail
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catcher 
+    catch 
     { 
         $server = [ordered]@{
             ComputerName=$computerName
