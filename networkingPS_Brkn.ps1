@@ -103,7 +103,7 @@ function Test-Network
                 $serverArray += Get-UserDetail $computerName
 
                 # Check if any security errors or warning was log to the eventlog
-                $errorOutputArray += Check-WarningsErrors $computerName
+                $errorOutputArray += Measure-WarningsErrors $computerName
 
                 # Get Network Information
                 $networkInformationArray += Get-NetworkInfo $computerName
@@ -191,7 +191,7 @@ function Get-UserDetail
 }
 #endRegion
 
-#Region Check-warningsErrors
+#Region Measure-WarningsErrors
 <#
 .Synopsis
    Check for warnings or errors 
@@ -201,7 +201,7 @@ function Get-UserDetail
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors
+function Measure-WarningsErrors
 {
     [CmdletBinding()]
     [Alias()]
@@ -256,7 +256,7 @@ function Check-WarningsErrors
                 ComputerName=$ComputerName
                 EntryType = "" ;  Index = "" ; Source = ""
                 InstanceID = ""
-                Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
+                Message = "(Measure-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
 
     }
