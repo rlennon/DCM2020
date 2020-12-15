@@ -1,0 +1,2 @@
+$Server = "Server01","Server02","Server03"
+$Server = Get-ADComputer -Filter { Enabled -eq $true } | Select-Object -ExpandProperty DnsHostName
