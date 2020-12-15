@@ -65,7 +65,8 @@ Test-Network $computerNames  # variable name changed back to lowercase 'c' AG!!!
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Test-Network { # Name of the funcion changed AG!!!
+function Test-Network {
+    # Name of the funcion changed AG!!!
     Param(
         [Parameter()]
         [string[]]
@@ -112,7 +113,7 @@ function Test-Network { # Name of the funcion changed AG!!!
             else {
                 $server = [ordered]@{
                     ComputerName = $computerName
-                    UserName = "Remote Server Not Available"   
+                    UserName     = "Remote Server Not Available"   
                 }
                 $serverArray += New-Object -TypeName PSObject -Property $server
             }
@@ -152,7 +153,8 @@ function Test-Network { # Name of the funcion changed AG!!!
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-UserDetails { # Name modified 's' added AG!!!
+function Get-UserDetails {
+    # Name modified 's' added AG!!!
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -169,14 +171,14 @@ function Get-UserDetails { # Name modified 's' added AG!!!
         # Add the server found to the server Array
         $server = [ordered]@{
             ComputerName = $ComputerName
-            UserName = $UserName
+            UserName     = $UserName
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
     catch { 
         $server = [ordered]@{
             ComputerName = $computerName
-            UserName = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
+            UserName     = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
@@ -194,7 +196,8 @@ function Get-UserDetails { # Name modified 's' added AG!!!
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-WarningsErrors { # CHANGET THE NAME TO GET SO THERE IS APPROVED NAME FOR PS NAMES  AG!!!
+function Get-WarningsErrors {
+    # CHANGET THE NAME TO GET SO THERE IS APPROVED NAME FOR PS NAMES  AG!!!
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -214,16 +217,17 @@ function Get-WarningsErrors { # CHANGET THE NAME TO GET SO THERE IS APPROVED NAM
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object { $_.EntryType -like 'Error' -or $_.EntryType -like 'Warning' }
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($null -ne $EventLogTest) {  #NOT SURE ABOUT THIS LINE AG!!! https://evotec.xyz/the-curious-case-of-null-should-be-on-the-left-side-of-equality-comparisons-psscriptanalyzer/ 
+        If ($null -ne $EventLogTest) {
+            #NOT SURE ABOUT THIS LINE AG!!! https://evotec.xyz/the-curious-case-of-null-should-be-on-the-left-side-of-equality-comparisons-psscriptanalyzer/ 
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest) {
                 $errorOutput = [ordered]@{
                     ComputerName = $ComputerName
-                    EntryType = $eventLog.EntryType
-                    Index = $eventLog.Index 
-                    Source = $eventLog.Source
-                    InstanceID = $eventLog.InstanceID
-                    Message = $eventLog.Message 
+                    EntryType    = $eventLog.EntryType
+                    Index        = $eventLog.Index 
+                    Source       = $eventLog.Source
+                    InstanceID   = $eventLog.InstanceID
+                    Message      = $eventLog.Message 
                 }
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
             }
@@ -232,11 +236,11 @@ function Get-WarningsErrors { # CHANGET THE NAME TO GET SO THERE IS APPROVED NAM
             # If no errors where found
             $errorOutput = [ordered]@{
                 ComputerName = $ComputerName
-                EntryType = ""
-                Index = "" 
-                Source = ""
-                InstanceID = ""
-                Message = "No Warning or Errors found on this server" 
+                EntryType    = ""
+                Index        = "" 
+                Source       = ""
+                InstanceID   = ""
+                Message      = "No Warning or Errors found on this server" 
             }
             $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
         }
@@ -277,28 +281,28 @@ function Get-NetworkInfo {
     try {
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
         $networkInfoOutput = [ordered]@{
-            ComputerName = $networkInfo.ComputerName
-            RemoteAddress = $networkInfo.RemoteAddress
+            ComputerName          = $networkInfo.ComputerName
+            RemoteAddress         = $networkInfo.RemoteAddress
             NameResolutionResults = $networkInfo.NameResolutionResults
-            InterfaceAlias = $networkInfo.InterfaceAlias
-            SourceAddress = $networkInfo.SourceAddress
-            NetRoute = $networkInfo.NetRoute
-            PingSucceeded = $networkInfo.PingSucceeded
-            PingReplyDetails = $networkInfo.PingReplyDetails 
+            InterfaceAlias        = $networkInfo.InterfaceAlias
+            SourceAddress         = $networkInfo.SourceAddress
+            NetRoute              = $networkInfo.NetRoute
+            PingSucceeded         = $networkInfo.PingSucceeded
+            PingReplyDetails      = $networkInfo.PingReplyDetails 
         }
         $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
     catch { 
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
         $networkInfoOutput = [ordered]@{
-            ComputerName = $networkInfo.ComputerName
-            RemoteAddress = "(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
+            ComputerName          = $networkInfo.ComputerName
+            RemoteAddress         = "(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
             NameResolutionResults = ""
-            InterfaceAlias = ""
-            SourceAddress = ""
-            NetRoute = ""
-            PingSucceeded = ""
-            PingReplyDetails = "" 
+            InterfaceAlias        = ""
+            SourceAddress         = ""
+            NetRoute              = ""
+            PingSucceeded         = ""
+            PingReplyDetails      = "" 
         }
         $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
@@ -319,7 +323,8 @@ function Get-NetworkInfo {
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # Get-OpenPorts function shown below.
-function Get-OpenPorts {  # replaced check with get
+function Get-OpenPorts {
+    # replaced check with get
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -336,8 +341,7 @@ function Get-OpenPorts {  # replaced check with get
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
-        foreach($ports in $PortList)
-        {
+        foreach ($ports in $PortList) {
             
             #BSc DCM 2020 - Fix this
             $portConnected = Test-NetConnection -ComputerName $ComputerName -Port $ports # Changed this lineAG!!!
@@ -347,8 +351,8 @@ function Get-OpenPorts {  # replaced check with get
             # this is one line of code only!
             $ports = [ordered]@{
                 ComputerName = $ComputerName
-                Port = $port
-                Open = $portConnected.TcpTestSucceeded
+                Port         = $port
+                Open         = $portConnected.TcpTestSucceeded
             }
             $checkOpenPortsArray += New-Object -TypeName PSObject -Property $ports
         }
@@ -356,8 +360,8 @@ function Get-OpenPorts {  # replaced check with get
     catch { 
         $ports = [ordered]@{
             ComputerName = $ComputerName
-            Port = $port
-            Open = "(Check-OpenPorts) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
+            Port         = $port
+            Open         = "(Check-OpenPorts) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
         }
         $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
