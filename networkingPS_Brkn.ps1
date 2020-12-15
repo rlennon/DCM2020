@@ -109,7 +109,7 @@ function Test-Network
                 $networkInformationArray += Get-NetworkInfo $computerName
 
                 # Check for open ports as per list given
-                $checkOpenPortsArray += Check-OpenPorts $computerName $portList
+                $checkOpenPortsArray += Measure-OpenPorts $computerName $portList
       
         } else {
         $server = [ordered]@{
@@ -320,7 +320,7 @@ function Get-NetworkInfo
 }
 #endregion
 
-#Region Check-OpenPorts
+#Region Measure-OpenPorts
 <#
 .Synopsis
    
@@ -332,7 +332,7 @@ function Get-NetworkInfo
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # check-openports function shown below.
-function Check-OpenPorts
+function Measure-OpenPorts
 {
     [CmdletBinding()]
     [Alias()]
@@ -372,7 +372,7 @@ function Check-OpenPorts
         $ports = [ordered]@{
                 ComputerName=$ComputerName
                 Port=$port
-                Open="(Check-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+                Open="(Measure-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
             }
             $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
