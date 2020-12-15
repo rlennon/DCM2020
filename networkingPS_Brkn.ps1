@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
+   Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 
 .DESCRIPTION
    This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
@@ -223,7 +223,7 @@ function Measure-WarningsErrors
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($EventLogTest -ne $null)
+        If ($null -ne $EventLogTest)
         {
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest)
