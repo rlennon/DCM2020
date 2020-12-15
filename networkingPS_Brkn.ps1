@@ -48,7 +48,7 @@
 #>
 
 
-Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
+Get-Content ".\Settings.ini" | foreach-object -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
 Test-Network $computerNames
@@ -81,7 +81,7 @@ function Test-Network
     $checkOpenPortsArray = @()
 
     # Ports to check
-    $portList = $settings.PortsToValidate.Split(",") # Split the sitring into a an array
+    $portList = $settings.PortsToValidate.Split(",") # Split the string into an array
 
     # Start to write to the Log File. All output will be written in the Log File
     Start-Transcript -Path $settings.Get_Item("LogFile")
@@ -331,7 +331,7 @@ function Get-NetworkInfo
 
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
-# check-openports function shown below.
+# measure-openports function shown below.
 function Measure-OpenPorts
 {
     [CmdletBinding()]
