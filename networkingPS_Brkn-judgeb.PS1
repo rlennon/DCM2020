@@ -270,6 +270,9 @@ function Get-NetworkInfo
     [Alias()]
     [OutputType([array])]
     Param(
+        [Parameter()]
+            [string[]]
+            $ComputerName
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
         )
@@ -314,7 +317,7 @@ function Get-NetworkInfo
 .Synopsis
    
 .DESCRIPTION
-   
+   This function will check for any Open Ports
 .PARAMETERS    
 #>
 
@@ -340,6 +343,7 @@ function Check-OpenPorts
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
+        function Check $ports $PortList
         {
             
             #BSc DCM 2020 - Fix this
