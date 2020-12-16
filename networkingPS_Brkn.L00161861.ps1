@@ -20,7 +20,7 @@
 
   <link crossorigin="anonymous" media="all" integrity="sha512-Zp5Bi1AD1Kw9L9fsBlTqVd0cvO/hoTq1Zuk8hGbjzxC62qw7S7/rYbha2A6C7B5icFPUNRaqRxI+F+EEk29esQ==" rel="stylesheet" href="https://github.githubassets.com/assets/frameworks-color-modes-669e418b5003d4ac3d2fd7ec0654ea55.css" />
   
-    <link crossorigin="anonymous" media="all" integrity="sha512-6Npji40y3Ezyv+ayNmOnYLw8dxgmoP/5QHk3XryRk2Ht45qc9FiCUpeW2vxbBhJYLz2/vTOsvnsIefaQrRr8Pg==" rel="stylesheet" href="https://github.githubassets.com/assets/github-e8da638b8d32dc4cf2bfe6b23663a760.css" />
+  <link crossorigin="anonymous" media="all" integrity="sha512-6Npji40y3Ezyv+ayNmOnYLw8dxgmoP/5QHk3XryRk2Ht45qc9FiCUpeW2vxbBhJYLz2/vTOsvnsIefaQrRr8Pg==" rel="stylesheet" href="https://github.githubassets.com/assets/github-e8da638b8d32dc4cf2bfe6b23663a760.css" />
     
     
     
