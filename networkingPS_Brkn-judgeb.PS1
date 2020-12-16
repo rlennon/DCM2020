@@ -169,7 +169,7 @@ function Get-UserDetail
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catcher 
+    catch
     { 
         $server = [ordered]@{
             ComputerName=$computerName
