@@ -313,7 +313,7 @@ function Get-NetworkInfo
     }
     catch 
     { 
-        $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
+        $networkInfo = Test-NetConnection -InformationLevel "Detailed" -ComputerName $computerName 
             $networkInfoOutput = [ordered]@{
                 ComputerName=$networkInfo.ComputerName
                 RemoteAddress="(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
@@ -367,7 +367,7 @@ function Measure-OpenPorts
         {
             
             #BSc DCM 2020 - Fix this
-            $portConnected = Test-NetConnection -InformationLevel Detailed -PortList $ports -ComputerName $ComputerName
+            $portConnected = Test-NetConnection -InformationLevel "Detailed" -PortList $ports -ComputerName $ComputerName
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
