@@ -78,7 +78,7 @@ function Test-Network
     $serverArray = @()
     $errorOutputArray = @()
     $networkInformationArray = @()
-    $checkOpenPortsArray = @()
+    $measureOpenPortsArray = @()
 
     # Ports to check
     $portList = $settings.PortsToValidate.Split(",") # Split the string into an array
@@ -110,7 +110,7 @@ function Test-Network
                 $networkInformationArray += Get-NetworkInfo $computerName
 
                 # Check for open ports as per list given
-                $checkOpenPortsArray += Measure-OpenPorts $computerName $portList
+                $measureOpenPortsArray += Measure-OpenPorts $computerName $portList
       
         } else {
         $server = [ordered]@{
@@ -139,7 +139,7 @@ function Test-Network
     "*" * 50
     Write-Output "*   Open Ports"
     "*" * 50
-    $checkOpenPortsArray | Format-Table -AutoSize
+    $measureOpenPortsArray | Format-Table -AutoSize
 
     Stop-Transcript
     }
@@ -329,10 +329,12 @@ function Get-NetworkInfo
 #Region Measure-OpenPorts
 <#
 .Synopsis
-   
+# Check Open Ports   
 .DESCRIPTION
-   
-.PARAMETERS    
+# This function will check for open ports  
+.PARAMETERS 
+# $ComputerName: A Valid Computer Name or IP Address
+# $PortList: A valid Port List   
 #>
 
 # BSc DCM - fix this
@@ -351,12 +353,13 @@ function Measure-OpenPorts
         [string[]]
         $PortList
         )
-    $checkOpenPortsArray = @()
+    $measureOpenPortsArray = @()
     try
     {
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
+        Foreach ($ports in $PortList)
         {
             
             #BSc DCM 2020 - Fix this
@@ -370,7 +373,7 @@ function Measure-OpenPorts
                 Port=$port
                 Open=$portConnected.TcpTestSucceeded
             }
-            $checkOpenPortsArray += New-Object -TypeName PSObject -Property $ports
+            $measureOpenPortsArray += New-Object -TypeName PSObject -Property $ports
         }
     }
     catch 
@@ -380,9 +383,9 @@ function Measure-OpenPorts
                 Port=$port
                 Open="(Measure-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
             }
-            $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
+            $measureOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
-    return $checkOpenPortsArray   
+    return $measureOpenPortsArray   
 }
 #endregion
 
