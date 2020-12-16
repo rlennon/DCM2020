@@ -359,11 +359,11 @@ function Measure-OpenPorts
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
-        Foreach ($ports in $PortList)
+        foreach ($ports in $PortList)
         {
             
             #BSc DCM 2020 - Fix this
-            # $portConnected =
+            $portConnected = Test-NetConnection -InformationLevel Detailed -PortList $ports -ComputerName $ComputerName
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
