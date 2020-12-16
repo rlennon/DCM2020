@@ -85,7 +85,8 @@ function Test-Network
 
     # Start to write to the Log File. All output will be written in the Log File
     Start-Transcript -Path $settings.Get_Item("LogFile")
-    }    Process
+    }    
+    Process
     {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
     #Which command should I use?
        Write-Output $computerNames  
@@ -160,6 +161,7 @@ function Get-UserDetail
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
+    
     Param(
         [Parameter()]
         [string]
@@ -206,6 +208,7 @@ function Measure-WarningsErrors
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
+    
     Param(
         [Parameter()]
         [string]
@@ -283,6 +286,9 @@ function Get-NetworkInfo
     Param(
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
+        [Parameter()]
+        [string]
+        $ComputerName
         )
 
     $networkInformationArray = @()
