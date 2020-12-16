@@ -67,13 +67,14 @@ Test-Network $computerNames
 function Test-Network
 {
     Param(
-     [Parameter()]
-        [string[]]
-        $ServerNames)
+    [Parameter()]
+    [string[]]
+    $ServerNames)
 
     Begin
     {
     $computerNames = $ServerNames
+
     # Creating objects to be used
     $serverArray = @()
     $errorOutputArray = @()
@@ -87,10 +88,11 @@ function Test-Network
     Start-Transcript -Path $settings.Get_Item("LogFile")
     }    
     Process
-    {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
-    #Which command should I use?
-       Write-Output $computerNames  
-    #  Write-Host $computerNames
+    {    
+    # BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
+    # Which command should I use?
+    Write-Output $computerNames  
+    # Write-Host $computerNames
     # Uncomment the correct one of the above choices!
 
 
@@ -100,22 +102,22 @@ function Test-Network
         # Test the connection to the ComputerName or Ip Address Given
         if (Test-Connection -ComputerName $computerName -Count 1 -Quiet)
         { 
-                # Get User Logged onto the server
-                $serverArray += Get-UserDetail $computerName
+            # Get User Logged onto the server
+            $serverArray += Get-UserDetail $computerName
 
-                # Check if any security errors or warning was log to the eventlog
-                $errorOutputArray += Measure-WarningsErrors $computerName
+            # Check if any security errors or warning was log to the eventlog
+            $errorOutputArray += Measure-WarningsErrors $computerName
 
-                # Get Network Information
-                $networkInformationArray += Get-NetworkInfo $computerName
+            # Get Network Information
+            $networkInformationArray += Get-NetworkInfo $computerName
 
-                # Check for open ports as per list given
-                $measureOpenPortsArray += Measure-OpenPorts $computerName $portList
+            # Check for open ports as per list given
+            $measureOpenPortsArray += Measure-OpenPorts $computerName $portList
       
         } else {
-        $server = [ordered]@{
-        ComputerName=$computerName
-        UserName="Remote Server Not Available"   }
+            $server = [ordered]@{
+            ComputerName=$computerName
+            UserName="Remote Server Not Available"   }
             $serverArray += New-Object -TypeName PSObject -Property $server
         }
     } # bottom of foreach loop
@@ -132,10 +134,12 @@ function Test-Network
     Write-Output "*   EventLog - Errors and Warnings"
     "*" * 50
     $errorOutputArray | Format-Table -AutoSize
+
     "*" * 50
     Write-Output "*   Network Information"
     "*" * 50
     $networkInformationArray | Format-Table -AutoSize
+
     "*" * 50
     Write-Output "*   Open Ports"
     "*" * 50
@@ -167,7 +171,7 @@ function Get-UserDetail
         [string]
         $ComputerName
         )
-    $serverArray = @()
+        $serverArray = @()
     try
     {
         # Get the UserName logged onto the server
@@ -232,13 +236,13 @@ function Measure-WarningsErrors
             Foreach ($eventLog in $EventLogTest)
             {
                 $errorOutput = [ordered]@{
-                    ComputerName=$ComputerName
-                    EntryType = $eventLog.EntryType
-                    Index = $eventLog.Index 
-                    Source = $eventLog.Source
-                    InstanceID = $eventLog.InstanceID
-                    Message = $eventLog.Message }
-                    $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
+                ComputerName=$ComputerName
+                EntryType = $eventLog.EntryType
+                Index = $eventLog.Index 
+                Source = $eventLog.Source
+                InstanceID = $eventLog.InstanceID
+                Message = $eventLog.Message }
+                $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
             }
         }else
         {
@@ -256,11 +260,11 @@ function Measure-WarningsErrors
     catch 
     { 
         $errorOutput = [ordered]@{
-                ComputerName=$ComputerName
-                EntryType = "" ;  Index = "" ; Source = ""
-                InstanceID = ""
-                Message = "(Measure-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
-                $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
+            ComputerName=$ComputerName
+            EntryType = "" ;  Index = "" ; Source = ""
+            InstanceID = ""
+            Message = "(Measure-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
+            $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
 
     }
     return $errorOutputArray   
@@ -296,30 +300,30 @@ function Get-NetworkInfo
     try
     {
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress=$networkInfo.RemoteAddress
-                    NameResolutionResults=$networkInfo.NameResolutionResults
-                    InterfaceAlias=$networkInfo.InterfaceAlias
-                    SourceAddress=$networkInfo.SourceAddress
-                    NetRoute=$networkInfo.NetRoute
-                    PingSucceeded=$networkInfo.PingSucceeded
-                    PingReplyDetails=$networkInfo.PingReplyDetails }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+            $networkInfoOutput = [ordered]@{
+                ComputerName=$networkInfo.ComputerName
+                RemoteAddress=$networkInfo.RemoteAddress
+                NameResolutionResults=$networkInfo.NameResolutionResults
+                InterfaceAlias=$networkInfo.InterfaceAlias
+                SourceAddress=$networkInfo.SourceAddress
+                NetRoute=$networkInfo.NetRoute
+                PingSucceeded=$networkInfo.PingSucceeded
+                PingReplyDetails=$networkInfo.PingReplyDetails }
+                $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
     catch 
     { 
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress="(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-                    NameResolutionResults=""
-                    InterfaceAlias=""
-                    SourceAddress=""
-                    NetRoute=""
-                    PingSucceeded=""
-                    PingReplyDetails="" }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+            $networkInfoOutput = [ordered]@{
+                ComputerName=$networkInfo.ComputerName
+                RemoteAddress="(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+                NameResolutionResults=""
+                InterfaceAlias=""
+                SourceAddress=""
+                NetRoute=""
+                PingSucceeded=""
+                PingReplyDetails="" }
+                $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
 
     return $networkInformationArray   
@@ -369,9 +373,9 @@ function Measure-OpenPorts
             # add an action of SilentlyContinue if a warning occurs
             # this is one line of code only!
             $ports = [ordered]@{
-                ComputerName=$ComputerName
-                Port=$port
-                Open=$portConnected.TcpTestSucceeded
+            ComputerName=$ComputerName
+            Port=$port
+            Open=$portConnected.TcpTestSucceeded
             }
             $measureOpenPortsArray += New-Object -TypeName PSObject -Property $ports
         }
@@ -379,9 +383,9 @@ function Measure-OpenPorts
     catch 
     { 
         $ports = [ordered]@{
-                ComputerName=$ComputerName
-                Port=$port
-                Open="(Measure-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+            ComputerName=$ComputerName
+            Port=$port
+            Open="(Measure-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
             }
             $measureOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
