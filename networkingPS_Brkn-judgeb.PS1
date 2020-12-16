@@ -343,7 +343,7 @@ function Check-OpenPorts
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
-        function Check $ports $PortList
+        foreach ($Ports in $PortList) #added this line of code
         {
             
             #BSc DCM 2020 - Fix this
