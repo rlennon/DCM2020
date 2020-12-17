@@ -50,7 +50,8 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 
 
 Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
-$computerNames = $settings.Get_Item("IPAddressesFile")
+$computerNames = Get-Content $settings.Get-Item("IPAddresses.txt")
+Write-Output "$settings"
 #Calling the Main function to carry out network tests
 NetworkTests $computerNames
 #Region Network-Tests
@@ -201,7 +202,7 @@ function Get-UserDetail
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors
+function CheckWarningsErrors
 {
     [CmdletBinding()]
     [Alias()]
@@ -223,7 +224,7 @@ function Check-WarningsErrors
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($EventLogTest -ne $null)
+        If ($null -ne $EventLogTest)
         {
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest)
@@ -332,7 +333,7 @@ function Get-NetworkInfo
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # check-openports function shown below.
-function Check-OpenPorts
+function CheckOpenPorts
 {
     [CmdletBinding()]
     [Alias()]
