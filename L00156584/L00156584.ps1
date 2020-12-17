@@ -11,7 +11,7 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
          3. Configure WinRM and allow your client PC as a TrustedHost
          4. Run Test-WsMan ComputerName to test if WinRM is correctly setup
 
-  NOTE: Please update the IPAddresses.txt file with your own IP addresses or Computer Names, and also ensure that you have the Settings.ini file.
+  NOTE: Please update the BN  file with your own IP addresses or Computer Names, and also ensure that you have the Settings.ini file.
 
 .CONCLUSION
    The goal of the script was to execute a list of commands from a central Windows server connecting 
@@ -50,10 +50,9 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 
 
 Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
-$computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
+$computerNames = $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
-Network-Tests $computerNames
-
+NetworkTests $computerNames
 #Region Network-Tests
 <# 
 .Synopsis
@@ -65,7 +64,7 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Network-Tests
+function NetworkTests
 {
     Param(
      [Parameter()]
@@ -89,7 +88,7 @@ function Network-Tests
     }    Process
     {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
     #Which command should I use?
-    #  Write-Output $computerNames  
+    Write-Output $computerNames  
     #  Write-Host $computerNames
     # Uncomment the correct one of the above choices!
 
@@ -122,26 +121,26 @@ function Network-Tests
     }
     End
     {
-    # Printing all the objects
-    "*" * 50
-    Write-Output "*   Servers Information"
-    "*" * 50
-    $serverArray | Format-Table -AutoSize
+        # Printing all the objects
+        "*" * 50
+        Write-Output "*   Servers Information"
+        "*" * 50
+        $serverArray | Format-Table -AutoSize
 
-    "*" * 50
-    Write-Output "*   EventLog - Errors and Warnings"
-    "*" * 50
-    $errorOutputArray | Format-Table -AutoSize
-    "*" * 50
-    Write-Output "*   Network Information"
-    "*" * 50
-    $networkInformationArray | Format-Table -AutoSize
-    "*" * 50
-    Write-Output "*   Open Ports"
-    "*" * 50
-    $checkOpenPortsArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   EventLog - Errors and Warnings"
+        "*" * 50
+        $errorOutputArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   Network Information"
+        "*" * 50
+        $networkInformationArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   Open Ports"
+        "*" * 50
+        $checkOpenPortsArray | Format-Table -AutoSize
 
-    Stop-Transcript
+        Stop-Transcript
     }
 }
 #endregion
@@ -179,7 +178,7 @@ function Get-UserDetail
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catch
+    catch 
     { 
         $server = [ordered]@{
             ComputerName=$computerName
