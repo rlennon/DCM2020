@@ -33,7 +33,7 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
    created domain environment configured using VMWare, using a Windows 2019 server running Active Directory 
    connecting to a Window 10 personal computer. 
    
-   The main function, called Network-Tests, accepts the list of servers from the IPAddresses.txt file and calls 
+   The main function, called NetworkTests, accepts the list of servers from the IPAddresses.txt file and calls 
    other functions to execute each task individually. This method ensures each function executes independently 
    and consist of its internal exception handling. The script will continue to run, even If one remote server 
    incorrectly configured or an exception thrown for one or more commands executed. 
@@ -50,11 +50,11 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 
 
 Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
-$computerNames = Get-Content $settings.Get-Item("IPAddresses.txt")
-Write-Output "$settings"
+$computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
+Write-Output "Settings are " $settings
 #Calling the Main function to carry out network tests
 NetworkTests $computerNames
-#Region Network-Tests
+#Region NetworkTests
 <# 
 .Synopsis
    Main Function doing network tests. 
@@ -156,7 +156,7 @@ function NetworkTests
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-UserDetail
+function GetUserDetail
 {
     [CmdletBinding()]
     [Alias()]
@@ -170,7 +170,7 @@ function Get-UserDetail
     try
     {
         # Get the UserName logged onto the server
-        $userName = (Get-WmiObject -Class win32_computersystem -ComputerName $ComputerName).UserName
+        $userName = (Get-CimInstance -Class win32_computersystem -ComputerName $ComputerName).UserName
 
         # Add the server found to the server Array
         $server = [ordered]@{
@@ -276,7 +276,7 @@ function CheckWarningsErrors
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Get-NetworkInfo
+function GetNetworkInfo
 {
     [CmdletBinding()]
     [Alias()]
