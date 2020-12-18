@@ -55,7 +55,7 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Network-Tests
+function Test-Network #Changed function name to resolve an unnaproved verb error.
 {
     Param(
      [Parameter()]
@@ -168,13 +168,13 @@ function Get-UserDetail
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catcher 
+    catch # Amended incorrect spelling of the 'catch' function
     { 
-        $server = [ordered]@{
+        $server = [ordered]@{  
             ComputerName=$computerName
             UserName="(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
         }
-        $serverArray = New-Object -TypeName PSObject -Property $server
+        #$serverArray = New-Object -TypeName PSObject -Property $server
     }
     return $serverArray   
     
@@ -190,7 +190,7 @@ function Get-UserDetail
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors
+function Test-WarningsErrors #Changed function name to an approved verb to resolve unnaproved verb error 
 {
     [CmdletBinding()]
     [Alias()]
@@ -212,7 +212,7 @@ function Check-WarningsErrors
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($EventLogTest -ne $null)
+        If ($null -ne $EventLogTest) #Moved $null to the left side of the equality comparisons to resolve error.
         {
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest)
@@ -228,7 +228,7 @@ function Check-WarningsErrors
             }
         }else
         {
-            # If no errors where found
+            # If no errors were found
                 $errorOutput = [ordered]@{
                 ComputerName=$ComputerName
                 EntryType = ""
@@ -325,32 +325,46 @@ function Get-NetworkInfo
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # check-openports function shown below.
-function Check-OpenPorts
+function Test-Openports #Changed function name to resolve unnaproved verb error
 {
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
     Param(
         [Parameter()]
-        [string]
+        [string]   #$ServerNames: Pass a list of server names as String Array (Commented out to resolve Variable reference is not valid and resolved in line 336)
+        $ServerNames)
+} #Added } to resolve Missing closing '}' in statement block or type definition
+        
+        #>
+        function Test-Network
+        {
+            Param(
+             [Parameter()]
+                [string[]]
+                $ServerNames)
+        }
+            Begin
+            {
+                $computerNames = $ServerNames   #I ignored this error as it appears to be a false positive
         $ComputerName,
-        [Parameter()]
+        #[Parameter()] #Commented out attribute to resolve Unexpected attribute 'Parameter'
         [string[]]
         $PortList
-        )
+         #removed ) to resolve Unexpected token ')' in expression or statement
     $checkOpenPortsArray = @()
     try
     {
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
-        foreach ($port in $PortList) {$port++}
+        foreach ($port in $PortList) {$port}
             
-        }
+            
         {
             
             #BSc DCM 2020 - Fix this
-            $portConnected = Test-NetConnection $ComputerName -InformationLevel -Port $ports
+            $portConnected = Test-NetConnection $ComputerName -InformationLevel -Port $port
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
