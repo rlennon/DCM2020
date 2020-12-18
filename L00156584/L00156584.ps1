@@ -90,11 +90,11 @@ function NetworkTests
     {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
     #Which command should I use?
     Write-Output $computerNames  
+    # Write-Host will only output to screen while Write-Output will allow to pass variable
     #  Write-Host $computerNames
     # Uncomment the correct one of the above choices!
 
-
-    # Start Process
+# Start Process
     Foreach ($computerName in $computerNames)
     {
         # Test the connection to the ComputerName or Ip Address Given
