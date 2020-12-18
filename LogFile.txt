@@ -1,0 +1,652 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20201218201738
+Username: MALVEZZINET\administrator
+RunAs User: MALVEZZINET\administrator
+Machine: AD1 (Microsoft Windows NT 10.0.14393.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell_ise.exe C:\Users\Administrator\Desktop\OOPR\networkingPS_Brkn.ps1
+Process ID: 6800
+PSVersion: 5.1.14393.1884
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.14393.1884
+BuildVersion: 10.0.14393.1884
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\Administrator\Desktop\OOPR\LogFile.txt
+
+Id      : 3844
+Handles : 215
+CPU     : 0.546875
+SI      : 1
+Name    : ApplicationFrameHost
+
+
+Id      : 2756
+Handles : 343
+CPU     : 0.390625
+SI      : 0
+Name    : certsrv
+
+
+Id      : 488
+Handles : 343
+CPU     : 2.234375
+SI      : 0
+Name    : csrss
+
+
+Id      : 596
+Handles : 267
+CPU     : 22.84375
+SI      : 1
+Name    : csrss
+
+
+Id      : 2788
+Handles : 354
+CPU     : 32.828125
+SI      : 0
+Name    : dfsrs
+
+
+Id      : 2308
+Handles : 185
+CPU     : 2.71875
+SI      : 0
+Name    : dfssvc
+
+
+Id      : 4392
+Handles : 215
+CPU     : 0.453125
+SI      : 0
+Name    : dllhost
+
+
+Id      : 2956
+Handles : 10360
+CPU     : 1.625
+SI      : 0
+Name    : dns
+
+
+Id      : 456
+Handles : 451
+CPU     : 57.6875
+SI      : 1
+Name    : dwm
+
+
+Id      : 6336
+Handles : 1958
+CPU     : 118.59375
+SI      : 1
+Name    : explorer
+
+
+Id      : 0
+Handles : 0
+CPU     :
+SI      : 0
+Name    : Idle
+
+
+Id      : 3040
+Handles : 166
+CPU     : 0.125
+SI      : 0
+Name    : inetinfo
+
+
+Id      : 1500
+Handles : 113
+CPU     : 0.0625
+SI      : 0
+Name    : ismserv
+
+
+Id      : 3608
+Handles : 692
+CPU     : 151.53125
+SI      : 0
+Name    : javaw
+
+
+Id      : 2804
+Handles : 375
+CPU     : 3.171875
+SI      : 0
+Name    : LogForwarder
+
+
+Id      : 3784
+Handles : 599
+CPU     : 10.1875
+SI      : 1
+Name    : LogForwarderClient
+
+
+Id      : 720
+Handles : 2514
+CPU     : 40.625
+SI      : 0
+Name    : lsass
+
+
+Id      : 2676
+Handles : 1047
+CPU     : 8.015625
+SI      : 0
+Name    : MediaStreamingProvider
+
+
+Id      : 2764
+Handles : 591
+CPU     : 7.34375
+SI      : 0
+Name    : Microsoft.ActiveDirectory.WebServices
+
+
+Id      : 2656
+Handles : 136
+CPU     : 0.125
+SI      : 0
+Name    : MpCmdRun
+
+
+Id      : 2816
+Handles : 338
+CPU     : 0.140625
+SI      : 0
+Name    : mqsvc
+
+
+Id      : 5088
+Handles : 180
+CPU     : 0.109375
+SI      : 0
+Name    : msdtc
+
+
+Id      : 2920
+Handles : 556
+CPU     : 429.5
+SI      : 0
+Name    : MsMpEng
+
+
+Id      : 6800
+Handles : 773
+CPU     : 3
+SI      : 1
+Name    : powershell_ise
+
+
+Id      : 4292
+Handles : 913
+CPU     : 8.328125
+SI      : 0
+Name    : ProviderRegistryService
+
+
+Id      : 2624
+Handles : 453
+CPU     : 2.59375
+SI      : 1
+Name    : RuntimeBroker
+
+
+Id      : 5960
+Handles : 113
+CPU     : 0.03125
+SI      : 0
+Name    : SearchFilterHost
+
+
+Id      : 6776
+Handles : 745
+CPU     : 36.96875
+SI      : 0
+Name    : SearchIndexer
+
+
+Id      : 7940
+Handles : 316
+CPU     : 0.0625
+SI      : 0
+Name    : SearchProtocolHost
+
+
+Id      : 3012
+Handles : 1569
+CPU     : 11.5
+SI      : 1
+Name    : SearchUI
+
+
+Id      : 712
+Handles : 442
+CPU     : 21.359375
+SI      : 0
+Name    : services
+
+
+Id      : 4724
+Handles : 1368
+CPU     : 36.703125
+SI      : 0
+Name    : SharedServiceHost
+
+
+Id      : 4732
+Handles : 1832
+CPU     : 48.375
+SI      : 0
+Name    : SharedServiceHost
+
+
+Id      : 4740
+Handles : 1188
+CPU     : 6.8125
+SI      : 0
+Name    : SharedServiceHost
+
+
+Id      : 6212
+Handles : 906
+CPU     : 3.59375
+SI      : 1
+Name    : ShellExperienceHost
+
+
+Id      : 4588
+Handles : 382
+CPU     : 1.421875
+SI      : 1
+Name    : sihost
+
+
+Id      : 2824
+Handles : 211
+CPU     : 0.15625
+SI      : 0
+Name    : smbhash
+
+
+Id      : 400
+Handles : 51
+CPU     : 0.171875
+SI      : 0
+Name    : smss
+
+
+Id      : 2944
+Handles : 658
+CPU     : 5.390625
+SI      : 0
+Name    : SMSvcHost
+
+
+Id      : 2616
+Handles : 423
+CPU     : 0.21875
+SI      : 0
+Name    : spoolsv
+
+
+Id      : 3692
+Handles : 1351
+CPU     : 169.46875
+SI      : 0
+Name    : storageservice
+
+
+Id      : 828
+Handles : 441
+CPU     : 0.390625
+SI      : 0
+Name    : svchost
+
+
+Id      : 884
+Handles : 643
+CPU     : 2.53125
+SI      : 0
+Name    : svchost
+
+
+Id      : 936
+Handles : 738
+CPU     : 13.578125
+SI      : 0
+Name    : svchost
+
+
+Id      : 1052
+Handles : 895
+CPU     : 2.8125
+SI      : 0
+Name    : svchost
+
+
+Id      : 1060
+Handles : 444
+CPU     : 3.265625
+SI      : 0
+Name    : svchost
+
+
+Id      : 1068
+Handles : 742
+CPU     : 38.78125
+SI      : 0
+Name    : svchost
+
+
+Id      : 1108
+Handles : 588
+CPU     : 5.359375
+SI      : 0
+Name    : svchost
+
+
+Id      : 1184
+Handles : 1147
+CPU     : 187.515625
+SI      : 0
+Name    : svchost
+
+
+Id      : 1244
+Handles : 2379
+CPU     : 922.15625
+SI      : 0
+Name    : svchost
+
+
+Id      : 1776
+Handles : 158
+CPU     : 0.09375
+SI      : 0
+Name    : svchost
+
+
+Id      : 1788
+Handles : 469
+CPU     : 0.59375
+SI      : 1
+Name    : svchost
+
+
+Id      : 2172
+Handles : 132
+CPU     : 0.078125
+SI      : 0
+Name    : svchost
+
+
+Id      : 2452
+Handles : 209
+CPU     : 60.8125
+SI      : 0
+Name    : svchost
+
+
+Id      : 2772
+Handles : 398
+CPU     : 1.484375
+SI      : 0
+Name    : svchost
+
+
+Id      : 2780
+Handles : 337
+CPU     : 0.75
+SI      : 0
+Name    : svchost
+
+
+Id      : 2836
+Handles : 404
+CPU     : 0.671875
+SI      : 0
+Name    : svchost
+
+
+Id      : 2852
+Handles : 217
+CPU     : 0.34375
+SI      : 0
+Name    : svchost
+
+
+Id      : 3048
+Handles : 138
+CPU     : 0.359375
+SI      : 0
+Name    : svchost
+
+
+Id      : 3064
+Handles : 245
+CPU     : 2.796875
+SI      : 0
+Name    : svchost
+
+
+Id      : 4836
+Handles : 227
+CPU     : 61.9375
+SI      : 0
+Name    : svchost
+
+
+Id      : 3056
+Handles : 119
+CPU     : 0.125
+SI      : 0
+Name    : SWLEMAgent
+
+
+Id      : 4
+Handles : 1081
+CPU     : 373.1875
+SI      : 0
+Name    : System
+
+
+Id      : 2340
+Handles : 229
+CPU     : 0.15625
+SI      : 1
+Name    : taskhostw
+
+
+Id      : 5808
+Handles : 327
+CPU     : 0.90625
+SI      : 1
+Name    : taskhostw
+
+
+Id      : 7620
+Handles : 1210
+CPU     : 0.640625
+SI      : 0
+Name    : TiWorker
+
+
+Id      : 8076
+Handles : 100
+CPU     : 11.390625
+SI      : 0
+Name    : TrustedInstaller
+
+
+Id      : 2876
+Handles : 150
+CPU     : 54.640625
+SI      : 0
+Name    : USBDefender
+
+
+Id      : 3032
+Handles : 198
+CPU     : 2.328125
+SI      : 0
+Name    : vds
+
+
+Id      : 2868
+Handles : 140
+CPU     : 0.15625
+SI      : 0
+Name    : VGAuthService
+
+
+Id      : 1520
+Handles : 105
+CPU     : 0.046875
+SI      : 0
+Name    : vm3dservice
+
+
+Id      : 6588
+Handles : 107
+CPU     : 0.03125
+SI      : 1
+Name    : vm3dservice
+
+
+Id      : 2860
+Handles : 343
+CPU     : 9.59375
+SI      : 0
+Name    : vmtoolsd
+
+
+Id      : 3280
+Handles : 488
+CPU     : 10.453125
+SI      : 1
+Name    : vmtoolsd
+
+
+Id      : 4540
+Handles : 196
+CPU     : 0.203125
+SI      : 0
+Name    : w3wp
+
+
+Id      : 7176
+Handles : 196
+CPU     : 0.09375
+SI      : 0
+Name    : w3wp
+
+
+Id      : 4424
+Handles : 142
+CPU     : 0.0625
+SI      : 0
+Name    : wbengine
+
+
+Id      : 588
+Handles : 92
+CPU     : 0.109375
+SI      : 0
+Name    : wininit
+
+
+Id      : 664
+Handles : 191
+CPU     : 0.15625
+SI      : 1
+Name    : winlogon
+
+
+Id      : 2580
+Handles : 1256
+CPU     : 270.171875
+SI      : 0
+Name    : WmiPrvSE
+
+
+Id      : 4284
+Handles : 303
+CPU     : 25.625
+SI      : 0
+Name    : WmiPrvSE
+
+
+Id      : 2128
+Handles : 131
+CPU     : 0.046875
+SI      : 0
+Name    : WSSBackup
+
+    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach).
+    #Which command should I use?
+    #  Write-Output $computerNames
+      Write-Host $computerNames
+    # Uncomment the correct one of the above choices!
+
+
+    # Start Process
+    Foreach ($computerName in $computerNames)
+    {
+        # Test the connection to the ComputerName or Ip Address Given
+        if (Test-Connection -ComputerName $computerName -Count 1 -Quiet)
+        {
+                # Get User Logged onto the server
+                $serverArray += Get-UserDetail $computerName
+
+                # Check if any security errors or warning was log to the eventlog
+                $errorOutputArray += Check-WarningsErrors $computerName
+
+                # Get Network Information
+                $networkInformationArray += Get-NetworkInfo $computerName
+
+                # Check for open ports as per list given
+                $checkOpenPortsArray += Check-OpenPorts $computerName $portList
+
+        } else {
+        $server = [ordered]@{
+        ComputerName=$computerName
+        UserName="Remote Server Not Available"   }
+            $serverArray += New-Object -TypeName PSObject -Property $server
+        }
+    } # bottom of foreach loop
+
+    # Printing all the objects
+    "*" * 50
+    Write-Output "*   Servers Information"
+    "*" * 50
+    $serverArray | Format-Table -AutoSize
+
+    "*" * 50
+    Write-Output "*   EventLog - Errors and Warnings"
+    "*" * 50
+    $errorOutputArray | Format-Table -AutoSize
+    "*" * 50
+    Write-Output "*   Network Information"
+    "*" * 50
+    $networkInformationArray | Format-Table -AutoSize
+    "*" * 50
+    Write-Output "*   Open Ports"
+    "*" * 50
+    $checkOpenPortsArray | Format-Table -AutoSize
+
+    Stop-Transcript
+
+
+
+**********************
+Windows PowerShell transcript end
+End time: 20201218201906
+**********************
