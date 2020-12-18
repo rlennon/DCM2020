@@ -397,3 +397,4 @@ function get-Check-OpenPorts
 }
 #endregion
 
+#Edited by Samuel Malvezzi - L00162285
