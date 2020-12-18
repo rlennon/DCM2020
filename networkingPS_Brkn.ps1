@@ -1,4 +1,4 @@
-<#
+	<#
 .SYNOPSIS
 	Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 	
@@ -139,15 +139,15 @@ Function Test-Network
 		Stop-Transcript
     }
 }
-	#endregion
+#endregion
 
 #Region Get-UserDetail
 <#
 .SYNOPSIS
-   Get User Detail
+    Get User Detail
    
 .DESCRIPTION
-   This Function will get the current user logged onto the server.
+    This Function will get the current user logged onto the server.
 
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
@@ -160,27 +160,25 @@ Function Get-UserDetail
     Param(
         [Parameter()]
         [string]
-        $ComputerName
-        )
-    $serverArray = @()
+        $ComputerName)
+		$serverArray = @()
     try
     {
         # Get the UserName logged onto the server
         $userName = (Get-WmiObject -Class win32_computersystem -ComputerName $ComputerName).UserName
-
         # Add the server found to the server Array
         $server = [ordered]@{
-            ComputerName=$ComputerName
-            UserName=$UserName
-        }
+        ComputerName = $ComputerName
+        UserName = $UserName
+							}
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catcher 
+    catch 
     { 
         $server = [ordered]@{
-            ComputerName=$computerName
-            UserName="(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-        }
+        ComputerName = $computerName
+        UserName ="(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+							}
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
     return $serverArray   
