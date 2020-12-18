@@ -177,7 +177,7 @@ Function Get-UserDetail
     { 
         $server = [ordered]@{
         ComputerName = $computerName
-        UserName ="(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+        UserName = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
 							}
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
@@ -275,40 +275,41 @@ Function Get-NetworkInfo
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
-    Param(
-        #BSC DCM students 2020 - fix this
-        #a parameter should be added here for the string variable named ComputerName
-        )
-
-    $networkInformationArray = @()
-
+   	Param(
+        [Parameter()]
+        [string]
+        $ComputerName)
+        #Parameter Computer name added
+		$networkInformationArray = @()
     try
     {
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress=$networkInfo.RemoteAddress
-                    NameResolutionResults=$networkInfo.NameResolutionResults
-                    InterfaceAlias=$networkInfo.InterfaceAlias
-                    SourceAddress=$networkInfo.SourceAddress
-                    NetRoute=$networkInfo.NetRoute
-                    PingSucceeded=$networkInfo.PingSucceeded
-                    PingReplyDetails=$networkInfo.PingReplyDetails }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+        $networkInfoOutput = [ordered]@{
+        ComputerName = $networkInfo.ComputerName
+        RemoteAddress = $networkInfo.RemoteAddress
+        NameResolutionResults = $networkInfo.NameResolutionResults
+        InterfaceAlias = $networkInfo.InterfaceAlias
+        SourceAddress = $networkInfo.SourceAddress
+        NetRoute = $networkInfo.NetRoute
+        PingSucceeded = $networkInfo.PingSucceeded
+        PingReplyDetails = $networkInfo.PingReplyDetails
+										}
+        $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
     catch 
     { 
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress="(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-                    NameResolutionResults=""
-                    InterfaceAlias=""
-                    SourceAddress=""
-                    NetRoute=""
-                    PingSucceeded=""
-                    PingReplyDetails="" }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+        $networkInfoOutput = [ordered]@{
+        ComputerName = $networkInfo.ComputerName
+        RemoteAddress = "(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+        NameResolutionResults = ""
+        InterfaceAlias = ""
+        SourceAddress = ""
+        NetRoute = ""
+        PingSucceeded = ""
+        PingReplyDetails = "" 
+										}
+        $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
 
     return $networkInformationArray   
