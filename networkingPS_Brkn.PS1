@@ -64,7 +64,7 @@ function Network-Tests
 
     Begin
     {
-    $computerNames = $ServerNames
+        $computerNames = $ServerNames
     # Creating objects to be used
     $serverArray = @()
     $errorOutputArray = @()
@@ -80,7 +80,7 @@ function Network-Tests
     {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
     #Which command should I use?
     #  Write-Output $computerNames  
-    #  Write-Host $computerNames
+    Write-Host $computerNames
     # Uncomment the correct one of the above choices!
 
 
@@ -271,6 +271,9 @@ function Get-NetworkInfo
     Param(
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
+        [Parameter()]
+            [string]
+            $ComputerName
         )
 
     $networkInformationArray = @()
@@ -311,10 +314,12 @@ function Get-NetworkInfo
 #Region Check-OpenPorts
 <#
 .Synopsis
-   
+   Get open ports info
 .DESCRIPTION
-   
-.PARAMETERS    
+   Lists open ports on a defined computer from a defined list of ports
+.PARAMETERS
+    $ComputerName: A Valid Computer Name or IP Address 
+    $PortList: A valid set of port names.  
 #>
 
 # BSc DCM - fix this
@@ -339,10 +344,13 @@ function Check-OpenPorts
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
+        foreach ($port in $PortList) {$port++}
+            
+        }
         {
             
             #BSc DCM 2020 - Fix this
-            # $portConnected =
+            $portConnected = Test-NetConnection $ComputerName -InformationLevel -Port $ports
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
