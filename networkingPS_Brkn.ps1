@@ -38,7 +38,6 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
    and consist of its internal exception handling. The script will continue to run, even If one remote server 
    incorrectly configured or an exception thrown for one or more commands executed. 
         
-
 .EXAMPLE
    Another example of how to use this cmdlet when using multiple servers
    . .\NetworkTests.ps1
@@ -48,13 +47,12 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
    Setting File: Settings.ini 
 #>
 
-
 Get-Content ".\Settings.ini" | foreach-object -begin { $settings = @{} } -process { $k = [regex]::split($_, '='); if (($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
-Test-Network $computerNames  # variable name changed back to lowercase 'c' AG!!! and Network-Tests changed to Test-Network
+Test-Network $computerNames  
 
-#Region Network-Tests
+#Region Test-Network
 <# 
 .Synopsis
    Main Function doing network tests. 
@@ -65,14 +63,13 @@ Test-Network $computerNames  # variable name changed back to lowercase 'c' AG!!!
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Test-Network {
-    # Name of the funcion changed AG!!!
+function Test-Network {   
     Param(
         [Parameter()]
         [string[]]
         $ServerNames)
     Begin {
-        $computerNames = $ServerNames # variable name changed back to lowercase AG!!!
+        $computerNames = $ServerNames
         # Creating objects to be used
         $serverArray = @()
         $errorOutputArray = @()
@@ -86,10 +83,10 @@ function Test-Network {
         Start-Transcript -Path $settings.Get_Item("LogFile")
     }    
     Process {
-        #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
-        #Which command should I use?
-        Write-Output $computerNames  # Write-Output writes to pipeline, and Write-Host writes to the console so in this case Write-Output is the correct option AG!!!  
-        #  Write-Host $computerNames
+        # BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
+        # Which command should I use?
+        Write-Output $computerNames 
+        # Write-Host $computerNames
         # Uncomment the correct one of the above choices!
 
 
@@ -97,17 +94,18 @@ function Test-Network {
         Foreach ($computerName in $computerNames) {
             # Test the connection to the ComputerName or Ip Address Given
             if (Test-Connection -ComputerName $computerName -Count 1 -Quiet) { 
+
                 # Get User Logged onto the server
                 $serverArray += Get-UserDetail $computerName
 
                 # Check if any security errors or warning was log to the eventlog
-                $errorOutputArray += Check-WarningsErrors $computerName
+                $errorOutputArray += Get-WarningsErrors $computerName
 
                 # Get Network Information
                 $networkInformationArray += Get-NetworkInfo $computerName
 
                 # Check for open ports as per list given
-                $checkOpenPortsArray += Check-OpenPorts $computerName $portList
+                $checkOpenPortsArray += Get-OpenPorts $computerName $portList
       
             }
             else {
@@ -154,7 +152,6 @@ function Test-Network {
     $ComputerName: A Valid Computer Name or IP Address
 #>
 function Get-UserDetails {
-    # Name modified 's' added AG!!!
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -164,6 +161,7 @@ function Get-UserDetails {
         $ComputerName
     )
     $serverArray = @()
+
     try {
         # Get the UserName logged onto the server
         $userName = (Get-WmiObject -Class win32_computersystem -ComputerName $ComputerName).UserName
@@ -186,7 +184,7 @@ function Get-UserDetails {
 }
 #endRegion
 
-#Region Check-warningsErrors
+#Region Get-WarningsErrors
 <#
 .Synopsis
    Check for warnings or errors 
@@ -197,7 +195,6 @@ function Get-UserDetails {
     $ComputerName: A Valid Computer Name or IP Address
 #>
 function Get-WarningsErrors {
-    # CHANGET THE NAME TO GET SO THERE IS APPROVED NAME FOR PS NAMES  AG!!!
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -217,8 +214,7 @@ function Get-WarningsErrors {
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object { $_.EntryType -like 'Error' -or $_.EntryType -like 'Warning' }
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($null -ne $EventLogTest) {
-            #NOT SURE ABOUT THIS LINE AG!!! https://evotec.xyz/the-curious-case-of-null-should-be-on-the-left-side-of-equality-comparisons-psscriptanalyzer/ 
+        If ($null -ne $EventLogTest) {    
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest) {
                 $errorOutput = [ordered]@{
@@ -248,9 +244,11 @@ function Get-WarningsErrors {
     catch { 
         $errorOutput = [ordered]@{
             ComputerName = $ComputerName
-            EntryType = "" ; Index = "" ; Source = ""
-            InstanceID = ""
-            Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId 
+            EntryType    = "" 
+            Index        = ""  
+            Source       = ""
+            InstanceID   = ""
+            Message      = "(Get-WarningsErrors) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId 
         }
         $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
     }
@@ -275,7 +273,7 @@ function Get-NetworkInfo {
     Param(
         [Parameter()]
         [string]
-        $ComputerName  # parameter added AG!!!
+        $ComputerName 
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
     )
@@ -312,14 +310,14 @@ function Get-NetworkInfo {
 }
 #endregion
 
-#Region Check-OpenPorts
+#Region Get-OpenPorts
 <#
 .Synopsis
    Get Open Ports list
 .DESCRIPTION
-   This function will get the list of open ports and display the results in an array showing computer name and list of ports.
+   The purpose of this function is to get the list of open ports and and return an array with computer names and port list. 
 .PARAMETERS    
-    $ComputerName  - a computer name or computer IP address  #added this section AG!!!
+    $ComputerName  - a computer name or computer IP address  
 #>
 
 # BSc DCM - fix this
@@ -343,10 +341,10 @@ function Get-OpenPorts {
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
-        foreach ($ports in $PortList) {
-            
+        Foreach ($ports in $PortList) {
+
             #BSc DCM 2020 - Fix this
-            $portConnected = Test-NetConnection -ComputerName $ComputerName -Port $ports # Changed this lineAG!!!
+            $portConnected = Test-NetConnection -ComputerName $ComputerName -Port $port -ErrorAction SilentlyContinue 
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             # check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
@@ -363,7 +361,7 @@ function Get-OpenPorts {
         $ports = [ordered]@{
             ComputerName = $ComputerName
             Port         = $port
-            Open         = "(Check-OpenPorts) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
+            Open         = "(Get-OpenPorts) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
         }
         $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
