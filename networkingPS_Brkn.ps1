@@ -1,4 +1,4 @@
-	<#
+<#
 .SYNOPSIS
 	Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 	
@@ -234,24 +234,24 @@ Function Get-WarningsErrors
 		else
         {
             # If no errors where found
-                $errorOutput = [ordered]@{
-                ComputerName=$ComputerName
-                EntryType = ""
-                Index = "" 
-                Source = ""
-                InstanceID = ""
-                Message = "No Warning or Errors found on this server" }
-                $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
+            $errorOutput = [ordered]@{
+            ComputerName=$ComputerName
+            EntryType = ""
+            Index = "" 
+            Source = ""
+            InstanceID = ""
+            Message = "No Warning or Errors found on this server" }
+            $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
         }
     }
     catch 
     { 
         $errorOutput = [ordered]@{
-            ComputerName=$ComputerName
-            EntryType = "" ;  Index = "" ; Source = ""
-            InstanceID = ""
-            Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
-            $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
+        ComputerName=$ComputerName
+        EntryType = "" ;  Index = "" ; Source = ""
+        InstanceID = ""
+        Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
+        $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
 
     }
     return $errorOutputArray   
@@ -262,10 +262,10 @@ Function Get-WarningsErrors
 #Region Get-NetworkInfo
 <#
 .SYNOPSIS
-   Get Network Info
+    Get Network Info
    
 .DESCRIPTION
-   This Function will get detailed network information
+    This Function will get detailed network information
 
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
@@ -326,6 +326,7 @@ Function Get-NetworkInfo
 	
 .PARAMETERS  
 	$ComputerName: A Valid Computer Name or IP Address
+	$PortList: A Valid Port List
 #>
 
 # BSc DCM - fix this
@@ -349,14 +350,14 @@ Function Get-OpenPorts
         # below an iterator here to go through all $ports in $PortList
         Foreach ($ports in $PortList)
 		{
-        $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -port $port -Warning SilentlyContinue
-        #check by port $port, and the computer name $ComputerName, added an action of SilentlyContinue if a warning occurs
-        $ports = [ordered]@{
-        ComputerName = $ComputerName
-        Port = $port
-        Open = $portConnected.TcpTestSucceeded
+			$portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -port $port -Warning SilentlyContinue
+			#check by port $port, and the computer name $ComputerName, added an action of SilentlyContinue if a warning occurs
+			$ports = [ordered]@{
+			ComputerName = $ComputerName
+			Port = $port
+			Open = $portConnected.TcpTestSucceeded
                            }
-        $checkOpenPortsArray += New-Object -TypeName PSObject -Property $ports
+			$checkOpenPortsArray += New-Object -TypeName PSObject -Property $ports
         }
     }
     catch 
