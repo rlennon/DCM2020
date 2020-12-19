@@ -93,7 +93,7 @@ function NetworkTests {
         # Uncomment the correct one of the above choices!
 
         # Start Process
-        Foreach ($computerName in $computerNames) {
+        foreach ($computerName in $computerNames) {
             # Test the connection to the ComputerName or Ip Address Given
             if (Test-Connection -ComputerName $computerName -Count 1 -Quiet) { 
                 
@@ -147,6 +147,7 @@ function NetworkTests {
 <#
 .Synopsis
    Get User Detail
+   
 .DESCRIPTION
    This function will get the current user logged onto the server.
 
@@ -193,6 +194,7 @@ function Get-UserDetail {
 <#
 .Synopsis
    Check for warnings or errors 
+
 .DESCRIPTION
    This function will check if any warnings or errors is on the server EventLog
 
@@ -200,6 +202,7 @@ function Get-UserDetail {
     $computerName: A Valid Computer Name or IP Address
 #>
 function Get-WarningsErrors {
+
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -249,7 +252,8 @@ function Get-WarningsErrors {
             $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
         }
     }
-    catch { 
+    catch {
+
         $errorOutput = [ordered]@{
             ComputerName    = $computerName
             EntryType       = "" ; Index = "" ; Source = ""
@@ -268,6 +272,7 @@ function Get-WarningsErrors {
 <#
 .Synopsis
    Get Network Info
+
 .DESCRIPTION
    This function will get detailed network information
 
@@ -324,16 +329,20 @@ function Get-NetworkInfo {
 #Region Get-OpenPorts
 <#
 .Synopsis
-Checks for open ports on domain
-.
-   
+    Checks for open ports on domain
+
+..DESCRIPTION
+   This function will get list of Open Ports
+
 .PARAMETERS    
+    $computerName: A Valid Computer Name or IP Address
 #>
 
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
-# Get-OpenPorts function shown below.
+# Get-OpenPorts function shown below changed from Check-OpenPorts
 function Get-OpenPorts {
+
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -346,6 +355,7 @@ function Get-OpenPorts {
         $portList
     )
     $checkOpenPortsArray = @()
+
     try {
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $portList
@@ -354,7 +364,7 @@ function Get-OpenPorts {
             
             #BSc DCM 2020 - Fix this
             $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -Port $port -WarningAction SilentlyContinue
-            # Fixed Code as to 
+            # Fixed Code 
             $ports = [ordered]@{
                 ComputerName = $computerName
                 Port         = $port
