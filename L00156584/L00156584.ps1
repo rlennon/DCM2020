@@ -27,11 +27,11 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
    The user requires administrator rights on the domain to be able to connect to all windows servers. 
    It is recommended to run the Enable-PSRemoting command and to enable the Window Remote Manager services 
    on all windows servers to establish connectivity between these servers. The Settings.ini file contains 
-   the location of the IPAddresses.txt file which has a list of either computer names or IP addresses. 
+   the location of the IPAddresses.txt file which has a list of either Computer names or IP addresses. 
    It also includes the path where the script will write logs and messages to an output.log file. The settings 
    file also contains a list of ports to validate for all servers. This script ran successfully on a newly 
    created domain environment configured using VMWare, using a Windows 2019 server running Active Directory 
-   connecting to a Window 10 personal computer. 
+   connecting to a Window 10 personal Computer. 
    
    The main function, called NetworkTests, accepts the list of servers from the IPAddresses.txt file and calls 
    other functions to execute each task individually. This method ensures each function executes independently 
@@ -62,18 +62,18 @@ NetworkTests $computerNames
    This function will call all the other functions to carry out network tests.
 
 .PARAMETERS
-   $ServerNames: Pass a list of server names as String Array
+   $serverNames: Pass a list of server names as String Array
 #>
 function NetworkTests
 {
     Param(
      [Parameter()]
         [string[]]
-        $ServerNames)
+        $serverNames)
 
     Begin
     {
-    $computerNames = $ServerNames
+    $computerNames = $serverNames
     # Creating objects to be used
     $serverArray = @()
     $errorOutputArray = @()
@@ -109,7 +109,7 @@ function NetworkTests
                 $networkInformationArray += Get-NetworkInfo $computerName
 
                 # Check for open ports as per list given
-                $checkOpenPortsArray += Check-OpenPorts $computerName $portList
+                $checkOpenPortsArray += Get-OpenPorts $computerName $portList
       
         } else {
         $server = [ordered]@{
@@ -153,7 +153,7 @@ function NetworkTests
    This function will get the current user logged onto the server.
 
 .PARAMETERS
-    $ComputerName: A Valid Computer Name or IP Address
+    $computerName: A Valid Computer Name or IP Address
 #>
 function Get-UserDetail
 {
@@ -163,17 +163,17 @@ function Get-UserDetail
     Param(
         [Parameter()]
         [string]
-        $ComputerName
+        $computerName
         )
     $serverArray = @()
     try
     {
         # Get the UserName logged onto the server
-        $userName = (Get-CimInstance -Class win32_computersystem -ComputerName $ComputerName).UserName
+        $userName = (Get-CimInstance -Class win32_Computersystem -ComputerName $computerName).UserName
 
         # Add the server found to the server Array
         $server = [ordered]@{
-            ComputerName = $ComputerName
+            ComputerName = $computerName
             UserName = $UserName
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
@@ -199,7 +199,7 @@ function Get-UserDetail
    This function will check if any warnings or errors is on the server EventLog
 
 .PARAMETERS
-    $ComputerName: A Valid Computer Name or IP Address
+    $computerName: A Valid Computer Name or IP Address
 #>
 function Get-WarningsErrors
 {
@@ -209,7 +209,7 @@ function Get-WarningsErrors
     Param(
         [Parameter()]
         [string]
-        $ComputerName
+        $computerName
         )
 
     # Date before and after to check 24 hours worth of data
@@ -220,16 +220,16 @@ function Get-WarningsErrors
     try
     {
         # Check if any security errors or warning was log to the eventlog
-        $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
+        $eventLogTest = Get-EventLog -ComputerName $computerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
-        #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($null -ne $EventLogTest)
+        #$eventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
+        If ($null -ne $eventLogTest)
         {
             # If Warnings or Errors found, then write it out to the log file
-            Foreach ($eventLog in $EventLogTest)
+            Foreach ($eventLog in $eventLogTest)
             {
                 $errorOutput = [ordered]@{
-                    ComputerName=$ComputerName
+                    ComputerName=$computerName
                     EntryType = $eventLog.EntryType
                     Index = $eventLog.Index 
                     Source = $eventLog.Source
@@ -241,7 +241,7 @@ function Get-WarningsErrors
         {
             # If no errors where found
                 $errorOutput = [ordered]@{
-                ComputerName=$ComputerName
+                ComputerName=$computerName
                 EntryType = ""
                 Index = "" 
                 Source = ""
@@ -253,7 +253,7 @@ function Get-WarningsErrors
     catch 
     { 
         $errorOutput = [ordered]@{
-                ComputerName=$ComputerName
+                ComputerName=$computerName
                 EntryType = "" ;  Index = "" ; Source = ""
                 InstanceID = ""
                 Message = "(Get-WarningErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
@@ -273,7 +273,7 @@ function Get-WarningsErrors
    This function will get detailed network information
 
 .PARAMETERS
-    $ComputerName: A Valid Computer Name or IP Address
+    $computerName: A Valid Computer Name or IP Address
 #>
 function Get-NetworkInfo
 {
@@ -320,10 +320,10 @@ function Get-NetworkInfo
 }
 #endregion
 
-#Region Check-OpenPorts
+#Region Get-OpenPorts
 <#
 .Synopsis
-   Checks for open ports on domain
+Checks for open ports on domain
 .
    
 .PARAMETERS    
@@ -331,8 +331,8 @@ function Get-NetworkInfo
 
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
-# check-openports function shown below.
-function Check-OpenPorts
+# Get-OpenPorts function shown below.
+function Get-OpenPorts
 {
     [CmdletBinding()]
     [Alias()]
@@ -340,25 +340,25 @@ function Check-OpenPorts
     Param(
         [Parameter()]
         [string]
-        $ComputerName,
+        $computerName,
         [Parameter()]
         [string[]]
-        $PortList
+        $portList
         )
     $checkOpenPortsArray = @()
     try
     {
         # BSc DCM 2020 - fix this
-        # We need an iterator here to go through all $ports in $PortList
+        # We need an iterator here to go through all $ports in $portList
         # Write in the single line of code to iterate through the port list
-        foreach($port in $PortList)
+        foreach($port in $portList)
         {
             
             #BSc DCM 2020 - Fix this
             $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -Port $port -WarningAction SilentlyContinue
             # Fixed Code as to 
             $ports = [ordered]@{
-                ComputerName=$ComputerName
+                ComputerName=$computerName
                 Port=$port
                 Open=$portConnected.TcpTestSucceeded
                 }
@@ -368,9 +368,9 @@ function Check-OpenPorts
     catch 
     { 
         $ports = [ordered]@{
-                ComputerName=$ComputerName
+                ComputerName=$computerName
                 Port=$port
-                Open="(Check-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+                Open="(Get-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
             }
             $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
