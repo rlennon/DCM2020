@@ -49,7 +49,7 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 #>
 
 
-Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
+Get-Content ".\Settings.ini" | foreach-object -begin { $settings = @{} } -process { $k = [regex]::split($_, '='); if (($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
 NetworkTests $computerNames
@@ -64,41 +64,38 @@ NetworkTests $computerNames
 .PARAMETERS
    $serverNames: Pass a list of server names as String Array
 #>
-function NetworkTests
-{
+function NetworkTests {
     Param(
-     [Parameter()]
+        [Parameter()]
         [string[]]
         $serverNames)
 
-    Begin
-    {
-    $computerNames = $serverNames
-    # Creating objects to be used
-    $serverArray = @()
-    $errorOutputArray = @()
-    $networkInformationArray = @()
-    $checkOpenPortsArray = @()
+    Begin {
+        $computerNames = $serverNames
+        # Creating objects to be used
+        $serverArray = @()
+        $errorOutputArray = @()
+        $networkInformationArray = @()
+        $checkOpenPortsArray = @()
 
-    # Ports to check
-    $portList = $settings.PortsToValidate.Split(",") # Split the string into a an array
+        # Ports to check
+        $portList = $settings.PortsToValidate.Split(",") # Split the string into a an array
 
-    # Start to write to the Log File. All output will be written in the Log File
-    Start-Transcript -Path $settings.Get_Item("LogFile")
-    }    Process
-    {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
-    #Which command should I use?
-    Write-Output $computerNames  
-    # Write-Host will only output to screen while Write-Output will allow to pass variable
-    #  Write-Host $computerNames
-    # Uncomment the correct one of the above choices!
+        # Start to write to the Log File. All output will be written in the Log File
+        Start-Transcript -Path $settings.Get_Item("LogFile")
+    }    
+    Process {    
+        # BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
+        #Which command should I use?
+        Write-Output $computerNames  
+        # Write-Host will only output to screen while Write-Output will allow to pass variable
+        # Write-Host $computerNames
+        # Uncomment the correct one of the above choices!
 
-# Start Process
-    Foreach ($computerName in $computerNames)
-    {
-        # Test the connection to the ComputerName or Ip Address Given
-        if (Test-Connection -ComputerName $computerName -Count 1 -Quiet)
-            { 
+        # Start Process
+        Foreach ($computerName in $computerNames) {
+            # Test the connection to the ComputerName or Ip Address Given
+            if (Test-Connection -ComputerName $computerName -Count 1 -Quiet) { 
                 # Get User Logged onto the server
                 $serverArray += Get-UserDetail $computerName
 
@@ -110,14 +107,15 @@ function NetworkTests
 
                 # Check for open ports as per list given
                 $checkOpenPortsArray += Get-OpenPorts $computerName $portList
-      
-        } else {
-        $server = [ordered]@{
-        ComputerName=$computerName
-        UserName="Remote Server Not Available"   }
-            $serverArray += New-Object -TypeName PSObject -Property $server
-        }
-    } # bottom of foreach loop
+            } 
+            else {
+                $server = [ordered]@{
+                    = $computerName
+                    UserName="Remote Server Not Available"   
+                }
+                $serverArray += New-Object -TypeName PSObject -Property $server
+            }
+        } # bottom of foreach loop
     }
     End
     {
@@ -155,8 +153,7 @@ function NetworkTests
 .PARAMETERS
     $computerName: A Valid Computer Name or IP Address
 #>
-function Get-UserDetail
-{
+function Get-UserDetail {
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -164,25 +161,23 @@ function Get-UserDetail
         [Parameter()]
         [string]
         $computerName
-        )
+    )
     $serverArray = @()
-    try
-    {
+    try {
         # Get the UserName logged onto the server
         $userName = (Get-CimInstance -Class win32_Computersystem -ComputerName $computerName).UserName
 
         # Add the server found to the server Array
         $server = [ordered]@{
             ComputerName = $computerName
-            UserName = $UserName
+            UserName     = $UserName
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catch 
-    { 
+    catch { 
         $server = [ordered]@{
-            ComputerName=$computerName
-            UserName="(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
+            ComputerName = $computerName
+            UserName     = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
@@ -201,8 +196,7 @@ function Get-UserDetail
 .PARAMETERS
     $computerName: A Valid Computer Name or IP Address
 #>
-function Get-WarningsErrors
-{
+function Get-WarningsErrors {
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -210,54 +204,53 @@ function Get-WarningsErrors
         [Parameter()]
         [string]
         $computerName
-        )
+    )
 
     # Date before and after to check 24 hours worth of data
     $DateBefore = (Get-Date)
     $DateAfter = (Get-Date).AddDays(-1)
 
     $errorOutputArray = @()
-    try
-    {
+    try {
         # Check if any security errors or warning was log to the eventlog
-        $eventLogTest = Get-EventLog -ComputerName $computerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
+        $eventLogTest = Get-EventLog -ComputerName $computerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object { $_.EntryType -like 'Error' -or $_.EntryType -like 'Warning' }
 
         #$eventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($null -ne $eventLogTest)
-        {
+        If ($null -ne $eventLogTest) {
             # If Warnings or Errors found, then write it out to the log file
-            Foreach ($eventLog in $eventLogTest)
-            {
+            Foreach ($eventLog in $eventLogTest) {
                 $errorOutput = [ordered]@{
-                    ComputerName=$computerName
-                    EntryType = $eventLog.EntryType
-                    Index = $eventLog.Index 
-                    Source = $eventLog.Source
-                    InstanceID = $eventLog.InstanceID
-                    Message = $eventLog.Message }
-                    $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
-            }
-        }else
-        {
-            # If no errors where found
-                $errorOutput = [ordered]@{
-                ComputerName=$computerName
-                EntryType = ""
-                Index = "" 
-                Source = ""
-                InstanceID = ""
-                Message = "No Warning or Errors found on this server" }
+                    ComputerName = $computerName
+                    EntryType    = $eventLog.EntryType
+                    Index        = $eventLog.Index 
+                    Source       = $eventLog.Source
+                    InstanceID   = $eventLog.InstanceID
+                    Message      = $eventLog.Message 
+                }
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
+            }
+        }
+        else {
+            # If no errors where found
+            $errorOutput = [ordered]@{
+                ComputerName = $computerName
+                EntryType    = ""
+                Index        = "" 
+                Source       = ""
+                InstanceID   = ""
+                Message      = "No Warning or Errors found on this server" 
+            }
+            $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
         }
     }
-    catch 
-    { 
+    catch { 
         $errorOutput = [ordered]@{
-                ComputerName=$computerName
-                EntryType = "" ;  Index = "" ; Source = ""
-                InstanceID = ""
-                Message = "(Get-WarningErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
-                $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
+            ComputerName = $computerName
+            EntryType = "" ; Index = "" ; Source = ""
+            InstanceID = ""
+            Message = "(Get-WarningErrors) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId 
+        }
+        $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
 
     }
     return $errorOutputArray   
@@ -275,47 +268,45 @@ function Get-WarningsErrors
 .PARAMETERS
     $computerName: A Valid Computer Name or IP Address
 #>
-function Get-NetworkInfo
-{
+function Get-NetworkInfo {
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
     Param(
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
-        )
+    )
 
     $networkInformationArray = @()
 
-    try
-    {
+    try {
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress=$networkInfo.RemoteAddress
-                    NameResolutionResults=$networkInfo.NameResolutionResults
-                    InterfaceAlias=$networkInfo.InterfaceAlias
-                    SourceAddress=$networkInfo.SourceAddress
-                    NetRoute=$networkInfo.NetRoute
-                    PingSucceeded=$networkInfo.PingSucceeded
-                    PingReplyDetails=$networkInfo.PingReplyDetails }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+        $networkInfoOutput = [ordered]@{
+            ComputerName          = $networkInfo.ComputerName
+            RemoteAddress         = $networkInfo.RemoteAddress
+            NameResolutionResults = $networkInfo.NameResolutionResults
+            InterfaceAlias        = $networkInfo.InterfaceAlias
+            SourceAddress         = $networkInfo.SourceAddress
+            NetRoute              = $networkInfo.NetRoute
+            PingSucceeded         = $networkInfo.PingSucceeded
+            PingReplyDetails      = $networkInfo.PingReplyDetails 
+        }
+        $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
-    catch 
-    { 
+    catch { 
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
-                $networkInfoOutput = [ordered]@{
-                    ComputerName=$networkInfo.ComputerName
-                    RemoteAddress="(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-                    NameResolutionResults=""
-                    InterfaceAlias=""
-                    SourceAddress=""
-                    NetRoute=""
-                    PingSucceeded=""
-                    PingReplyDetails="" }
-                    $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
+        $networkInfoOutput = [ordered]@{
+            ComputerName          = $networkInfo.ComputerName
+            RemoteAddress         = "(Get-NetworkInfo) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
+            NameResolutionResults = ""
+            InterfaceAlias        = ""
+            SourceAddress         = ""
+            NetRoute              = ""
+            PingSucceeded         = ""
+            PingReplyDetails      = "" 
+        }
+        $networkInformationArray = New-Object -TypeName PSObject -Property $networkInfoOutput
     }
-
     return $networkInformationArray   
 }
 #endregion
@@ -332,8 +323,7 @@ Checks for open ports on domain
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # Get-OpenPorts function shown below.
-function Get-OpenPorts
-{
+function Get-OpenPorts {
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -344,35 +334,32 @@ function Get-OpenPorts
         [Parameter()]
         [string[]]
         $portList
-        )
+    )
     $checkOpenPortsArray = @()
-    try
-    {
+    try {
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $portList
         # Write in the single line of code to iterate through the port list
-        foreach($port in $portList)
-        {
+        foreach ($port in $portList) {
             
             #BSc DCM 2020 - Fix this
             $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -Port $port -WarningAction SilentlyContinue
             # Fixed Code as to 
             $ports = [ordered]@{
-                ComputerName=$computerName
-                Port=$port
-                Open=$portConnected.TcpTestSucceeded
-                }
+                ComputerName = $computerName
+                Port         = $port
+                Open         = $portConnected.TcpTestSucceeded
+            }
             $checkOpenPortsArray += New-Object -TypeName PSObject -Property $ports
         }
     }
-    catch 
-    { 
+    catch { 
         $ports = [ordered]@{
-                ComputerName=$computerName
-                Port=$port
-                Open="(Get-OpenPorts) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-            }
-            $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
+            ComputerName = $computerName
+            Port         = $port
+            Open         = "(Get-OpenPorts) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
+        }
+        $checkOpenPortsArray = New-Object -TypeName PSObject -Property $ports
     }
     return $checkOpenPortsArray   
 }
