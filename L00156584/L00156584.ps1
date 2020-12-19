@@ -49,7 +49,7 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 #>
 
 
-Get-Content ".\Settings.ini" | foreach-object -begin { $settings = @{} } -process { $k = [regex]::split($_, '='); if (($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
+Get-Content ".\Settings.ini" | foreach-object -begin { $settings = @{} } -process {$k = [regex]::split($_, '='); if (($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) {$settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
 NetworkTests $computerNames
@@ -65,6 +65,7 @@ NetworkTests $computerNames
    $serverNames: Pass a list of server names as String Array
 #>
 function NetworkTests {
+
     Param(
         [Parameter()]
         [string[]]
@@ -73,10 +74,10 @@ function NetworkTests {
     Begin {
         $computerNames = $serverNames
         # Creating objects to be used
-        $serverArray = @()
-        $errorOutputArray = @()
-        $networkInformationArray = @()
-        $checkOpenPortsArray = @()
+        $serverArray                = @()
+        $errorOutputArray           = @()
+        $networkInformationArray    = @()
+        $checkOpenPortsArray        = @()
 
         # Ports to check
         $portList = $settings.PortsToValidate.Split(",") # Split the string into a an array
@@ -111,8 +112,8 @@ function NetworkTests {
             } 
             else {
                 $server = [ordered]@{
-                    ComputerName = $computerName
-                    UserName = "Remote Server Not Available"   
+                    ComputerName    = $computerName
+                    UserName        = "Remote Server Not Available"   
                 }
                 $serverArray += New-Object -TypeName PSObject -Property $server
             }
@@ -147,7 +148,7 @@ function NetworkTests {
 <#
 .Synopsis
    Get User Detail
-   
+
 .DESCRIPTION
    This function will get the current user logged onto the server.
 
@@ -214,7 +215,7 @@ function Get-WarningsErrors {
 
     # Date before and after to check 24 hours worth of data
     $DateBefore = (Get-Date)
-    $DateAfter = (Get-Date).AddDays(-1)
+    $DateAfter  = (Get-Date).AddDays(-1)
 
     $errorOutputArray = @()
     try {
@@ -280,6 +281,7 @@ function Get-WarningsErrors {
     $computerName: A Valid Computer Name or IP Address
 #>
 function Get-NetworkInfo {
+
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
