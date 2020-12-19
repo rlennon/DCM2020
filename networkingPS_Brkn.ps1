@@ -54,7 +54,7 @@ Test-Network $computerNames
 #Region Test-Network
 <# 
 .SYNOPSIS
-    Main Function doing test network. 
+    Main Function doing network tests. 
 
 .DESCRIPTION
     This Function will call all the other Functions to carry out network tests.
@@ -65,32 +65,32 @@ Test-Network $computerNames
 Function Test-Network
 {
     Param(
-		[Parameter()]
+        [Parameter()]
         [string[]]
         $ServerNames)
 
     Begin
     {
-		$computerNames = $ServerNames
-		# Creating objects to be used
-		$serverArray = @()
-		$errorOutputArray = @()
-		$networkInformationArray = @()
-		$checkOpenPortsArray = @()
-		# Ports to check
-		$portList = $settings.PortsToValidate.Split(",") # Split the sitring into a an array
-		# Start to write to the Log File. All output will be written in the Log File
-		Start-Transcript -Path $settings.Get_Item("LogFile")
+        $computerNames = $ServerNames
+        # Creating objects to be used
+        $serverArray = @()
+        $errorOutputArray = @()
+        $networkInformationArray = @()
+        $checkOpenPortsArray = @()
+        # Ports to check
+        $portList = $settings.PortsToValidate.Split(",") # Split the sitring into a an array
+        # Start to write to the Log File. All output will be written in the Log File
+        Start-Transcript -Path $settings.Get_Item("LogFile")
     }    
-	Process
+    Process
     {    
-		# BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
-		# Which command should I use?
-		Write-Output $computerNames  
-		# Write-Host $computerNames
-		# Uncomment the correct one of the above choices!
+        # BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
+        # Which command should I use?
+        Write-Output $computerNames  
+        # Write-Host $computerNames
+        # Uncomment the correct one of the above choices!
 
-	# Start Process
+    # Start Process
     Foreach ($computerName in $computerNames)
     {
         # Test the connection to the ComputerName or Ip Address Given
@@ -105,37 +105,37 @@ Function Test-Network
             # Check for open ports as per list given
             $checkOpenPortsArray += Check-OpenPorts $computerName $portList
         } 
-		else 
-		{
-			$server = [ordered]@{
-			ComputerName = $computerName
-			UserName = "Remote Server Not Available"   
-								}
-			$serverArray += New-Object -TypeName PSObject -Property $server
+        else 
+        {
+            $server = [ordered]@{
+            ComputerName = $computerName
+            UserName = "Remote Server Not Available"   
+                                }
+            $serverArray += New-Object -TypeName PSObject -Property $server
         }
     } # bottom of Foreach loop
     }
     End
     {
-		# Printing all the objects
-		"*" * 50
-		Write-Output "*   Servers Information"
-		"*" * 50
-		$serverArray | Format-Table -AutoSize
-		"*" * 50
-		Write-Output "*   EventLog - Errors and Warnings"
-		"*" * 50
-		$errorOutputArray | Format-Table -AutoSize
-		"*" * 50
-		Write-Output "*   Network Information"
-		"*" * 50
-		$networkInformationArray | Format-Table -AutoSize
-		"*" * 50
-		Write-Output "*   Open Ports"
-		"*" * 50
-		$checkOpenPortsArray | Format-Table -AutoSize
+        # Printing all the objects
+        "*" * 50
+        Write-Output "*   Servers Information"
+        "*" * 50
+        $serverArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   EventLog - Errors and Warnings"
+        "*" * 50
+        $errorOutputArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   Network Information"
+        "*" * 50
+        $networkInformationArray | Format-Table -AutoSize
+        "*" * 50
+        Write-Output "*   Open Ports"
+        "*" * 50
+        $checkOpenPortsArray | Format-Table -AutoSize
 
-		Stop-Transcript
+        Stop-Transcript
     }
 }
 #endregion
@@ -143,7 +143,7 @@ Function Test-Network
 #Region Get-UserDetail
 <#
 .SYNOPSIS
-     Get User Detail
+    Get User Detail
    
 .DESCRIPTION
     This Function will get the current user logged onto the server.
@@ -160,7 +160,7 @@ Function Get-UserDetail
         [Parameter()]
         [string]
         $ComputerName)
-		$serverArray = @()
+        $serverArray = @()
     try
     {
         # Get the UserName logged onto the server
@@ -169,7 +169,7 @@ Function Get-UserDetail
         $server = [ordered]@{
         ComputerName = $ComputerName
         UserName = $UserName
-							}
+                            }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
     catch 
@@ -177,7 +177,7 @@ Function Get-UserDetail
         $server = [ordered]@{
         ComputerName = $computerName
         UserName = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId
-							}
+                            }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
     return $serverArray   
@@ -230,7 +230,7 @@ Function Get-WarningsErrors
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
             }
         }
-		else
+        else
         {
             # If no errors where found
             $errorOutput = [ordered]@{
@@ -274,12 +274,12 @@ Function Get-NetworkInfo
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
-   	Param(
+    Param(
         [Parameter()]
         [string]
         $ComputerName)
         #Parameter Computer name added
-		$networkInformationArray = @()
+        $networkInformationArray = @()
     try
     {
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
@@ -321,11 +321,11 @@ Function Get-NetworkInfo
     Get Open Ports 
 
 .DESCRIPTION
-	This Function will check for OpenPors within ComputerName and PortList
+    This Function will check for OpenPors within ComputerName and PortList
 	
 .PARAMETERS  
-	$ComputerName: A Valid Computer Name or IP Address
-	$PortList: A Valid Port List
+    $ComputerName: A Valid Computer Name or IP Address
+    $PortList: A Valid Port List
 #>
 
 # BSc DCM - fix this
@@ -343,20 +343,20 @@ Function Get-OpenPorts
         [Parameter()]
         [string[]]
         $PortList)
-		$checkOpenPortsArray = @()
+        $checkOpenPortsArray = @()
     try
     {
         # below an iterator here to go through all $ports in $PortList
         Foreach ($ports in $PortList)
-		{
-			$portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -port $port -Warning SilentlyContinue
-			#check by port $port, and the computer name $ComputerName, added an action of SilentlyContinue if a warning occurs
-			$ports = [ordered]@{
-			ComputerName = $ComputerName
-			Port = $port
-			Open = $portConnected.TcpTestSucceeded
-                           }
-			$checkOpenPortsArray += New-Object -TypeName PSObject -Property $ports
+        {
+            $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -port $port -Warning SilentlyContinue
+            #check by port $port, and the computer name $ComputerName, added an action of SilentlyContinue if a warning occurs
+            $ports = [ordered]@{
+            ComputerName = $ComputerName
+            Port = $port
+            Open = $portConnected.TcpTestSucceeded
+                               }
+            $checkOpenPortsArray += New-Object -TypeName PSObject -Property $ports
         }
     }
     catch 
