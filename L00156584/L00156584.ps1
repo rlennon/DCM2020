@@ -251,10 +251,10 @@ function Get-WarningsErrors {
     }
     catch { 
         $errorOutput = [ordered]@{
-            ComputerName = $computerName
-            EntryType = "" ; Index = "" ; Source = ""
-            InstanceID = ""
-            Message = "(Get-WarningErrors) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId 
+            ComputerName    = $computerName
+            EntryType       = "" ; Index = "" ; Source = ""
+            InstanceID      = ""
+            Message         = "(Get-WarningErrors) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId 
         }
         $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
 
@@ -289,6 +289,7 @@ function Get-NetworkInfo {
     $networkInformationArray = @()
 
     try {
+
         $networkInfo = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName 
         $networkInfoOutput = [ordered]@{
             ComputerName          = $networkInfo.ComputerName
