@@ -144,7 +144,7 @@ Function Test-Network
 #Region Get-UserDetail
 <#
 .SYNOPSIS
-    Get User Detail
+     Get User Detail
    
 .DESCRIPTION
     This Function will get the current user logged onto the server.
