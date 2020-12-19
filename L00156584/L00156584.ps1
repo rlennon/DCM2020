@@ -110,15 +110,14 @@ function NetworkTests {
             } 
             else {
                 $server = [ordered]@{
-                    = $computerName
-                    UserName="Remote Server Not Available"   
+                    ComputerName = $computerName
+                    UserName = "Remote Server Not Available"   
                 }
                 $serverArray += New-Object -TypeName PSObject -Property $server
             }
         } # bottom of foreach loop
     }
-    End
-    {
+    End{
         # Printing all the objects
         "*" * 50
         Write-Output "*   Servers Information"
@@ -154,6 +153,7 @@ function NetworkTests {
     $computerName: A Valid Computer Name or IP Address
 #>
 function Get-UserDetail {
+    
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
