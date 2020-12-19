@@ -81,7 +81,7 @@ function NetworkTests
     $checkOpenPortsArray = @()
 
     # Ports to check
-    $portList = $settings.PortsToValidate.Split(",") # Split the sitring into a an array
+    $portList = $settings.PortsToValidate.Split(",") # Split the string into a an array
 
     # Start to write to the Log File. All output will be written in the Log File
     Start-Transcript -Path $settings.Get_Item("LogFile")
@@ -98,12 +98,12 @@ function NetworkTests
     {
         # Test the connection to the ComputerName or Ip Address Given
         if (Test-Connection -ComputerName $computerName -Count 1 -Quiet)
-        { 
+            { 
                 # Get User Logged onto the server
                 $serverArray += Get-UserDetail $computerName
 
                 # Check if any security errors or warning was log to the eventlog
-                $errorOutputArray += Check-WarningsErrors $computerName
+                $errorOutputArray += Get-WarningsErrors $computerName
 
                 # Get Network Information
                 $networkInformationArray += Get-NetworkInfo $computerName
@@ -173,8 +173,8 @@ function Get-UserDetail
 
         # Add the server found to the server Array
         $server = [ordered]@{
-            ComputerName=$ComputerName
-            UserName=$UserName
+            ComputerName = $ComputerName
+            UserName = $UserName
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
@@ -191,7 +191,7 @@ function Get-UserDetail
 }
 #endRegion
 
-#Region Check-warningsErrors
+#Region Get-WarningsErrors
 <#
 .Synopsis
    Check for warnings or errors 
@@ -201,7 +201,7 @@ function Get-UserDetail
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Check-WarningsErrors
+function Get-WarningsErrors
 {
     [CmdletBinding()]
     [Alias()]
@@ -256,7 +256,7 @@ function Check-WarningsErrors
                 ComputerName=$ComputerName
                 EntryType = "" ;  Index = "" ; Source = ""
                 InstanceID = ""
-                Message = "(Check-WarningsErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
+                Message = "(Get-WarningErrors) Server Error: " + $_.Exception.Message + " : "  + $_.FullyQualifiedErrorId }
                 $errorOutputArray = New-Object -TypeName PSObject -Property $errorOutput
 
     }
@@ -323,8 +323,8 @@ function Get-NetworkInfo
 #Region Check-OpenPorts
 <#
 .Synopsis
-   
-.DESCRIPTION
+   Checks for open ports on domain
+.
    
 .PARAMETERS    
 #>
@@ -355,11 +355,8 @@ function Check-OpenPorts
         {
             
             #BSc DCM 2020 - Fix this
-            $portConnected = $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -Port $port -WarningAction SilentlyContinue
-            # finish the above line of code using the Test-NetConnection command and then uncomment.
-            #check by port $port, and the computer name $ComputerName.
-            # add an action of SilentlyContinue if a warning occurs
-            # this is one line of code only!
+            $portConnected = Test-NetConnection -InformationLevel Detailed -ComputerName $computerName -Port $port -WarningAction SilentlyContinue
+            # Fixed Code as to 
             $ports = [ordered]@{
                 ComputerName=$ComputerName
                 Port=$port
