@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-	Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
+    Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
 	
 .DESCRIPTION
-	This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
-	The following needs to be configured on each server
+    This script will run several network tests commands and display an exception if the server is not configured to receive Inbound calls or added as a TrustedHost. 
+    The following needs to be configured on each server
        1. Run Enable-PSRemoting
        2. Windows Remote Management (HTTP-In) needs to be enables. use New-NetFirewallRule to set the firewall rules.
        3. Configure WinRM and allow your client PC as a TrustedHost
@@ -13,39 +13,38 @@
 .NOTE: Please update the IPAddresses.txt file with your own IP addresses or Computer Names, and also ensure that you have the Settings.ini file.
 
 .CONCLUSION
-	The goal of the script was to execute a list of commands from a central Windows server connecting 
-	to multiple remote servers on the same network. The list of commands is testing networks connections, 
-	get the current user logged onto the server, check if any security warnings and errors on the server’s 
-	event logs, display the server’s detailed network information and check if any given ports are open or 
-	closed on the server. 
+    The goal of the script was to execute a list of commands from a central Windows server connecting 
+    to multiple remote servers on the same network. The list of commands is testing networks connections, 
+    get the current user logged onto the server, check if any security warnings and errors on the server’s 
+    event logs, display the server’s detailed network information and check if any given ports are open or 
+    closed on the server. 
 
-	The strategy selected was to connect to multiple Windows operating machines only connected on the same 
-	domain sharing the same gateway. It is important to note that this script will not work if all windows 
-	machines are not on the same trusted network domain. 
-
-	The user requires administrator rights on the domain to be able to connect to all windows servers. 
-	It is recommended to run the Enable-PSRemoting command and to enable the Window Remote Manager services 
-	on all windows servers to establish connectivity between these servers. The Settings.ini file contains 
-	the location of the IPAddresses.txt file which has a list of either computer names or IP addresses. 
-	It also includes the path where the script will write logs and messages to an output.log file. The settings 
-	file also contains a list of ports to validate for all servers. This script ran successfully on a newly 
-	created domain environment configured using VMWare, using a Windows 2019 server running Active Directory 
-	connecting to a Window 10 personal computer. 
+    The strategy selected was to connect to multiple Windows operating machines only connected on the same 
+    domain sharing the same gateway. It is important to note that this script will not work if all windows 
+    machines are not on the same trusted network domain. 
+	
+    The user requires administrator rights on the domain to be able to connect to all windows servers. 
+    It is recommended to run the Enable-PSRemoting command and to enable the Window Remote Manager services 
+    on all windows servers to establish connectivity between these servers. The Settings.ini file contains 
+    the location of the IPAddresses.txt file which has a list of either computer names or IP addresses. 
+    It also includes the path where the script will write logs and messages to an output.log file. The settings 
+    file also contains a list of ports to validate for all servers. This script ran successfully on a newly 
+    created domain environment configured using VMWare, using a Windows 2019 server running Active Directory 
+    connecting to a Window 10 personal computer. 
    
-	The main Function, called Test-Network, accepts the list of servers from the IPAddresses.txt file and calls 
-	other Functions to execute each task individually. This method ensures each Function executes independently 
-	and consist of its internal exception handling. The script will continue to run, even If one remote server 
-	incorrectly configured or an exception thrown for one or more commands executed. 
+    The main Function, called Test-Network, accepts the list of servers from the IPAddresses.txt file and calls 
+    other Functions to execute each task individually. This method ensures each Function executes independently 
+    and consist of its internal exception handling. The script will continue to run, even If one remote server 
+    incorrectly configured or an exception thrown for one or more commands executed. 
       
 .EXAMPLE
-	Another example of how to use this cmdlet when using multiple servers
-	  . .\NetworkTests.ps1
+    Another example of how to use this cmdlet when using multiple servers
+     . .\NetworkTests.ps1
 
 .NOTES
-	Filename:     NetworkTests.ps1
-	Setting File: Settings.ini 
+    Filename: NetworkTests.ps1
+    Setting File: Settings.ini 
 #>
-
 
 Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
 $computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
@@ -55,13 +54,13 @@ Test-Network $computerNames
 #Region Test-Network
 <# 
 .SYNOPSIS
-	Main Function doing network tests. 
+    Main Function doing test network. 
 
 .DESCRIPTION
-	This Function will call all the other Functions to carry out network tests.
+    This Function will call all the other Functions to carry out network tests.
 
 .PARAMETERS
-	$ServerNames: Pass a list of server names as String Array
+    $ServerNames: Pass a list of server names as String Array
 #>
 Function Test-Network
 {
