@@ -96,6 +96,7 @@ function NetworkTests {
         Foreach ($computerName in $computerNames) {
             # Test the connection to the ComputerName or Ip Address Given
             if (Test-Connection -ComputerName $computerName -Count 1 -Quiet) { 
+                
                 # Get User Logged onto the server
                 $serverArray += Get-UserDetail $computerName
 
@@ -153,7 +154,7 @@ function NetworkTests {
     $computerName: A Valid Computer Name or IP Address
 #>
 function Get-UserDetail {
-    
+
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -163,14 +164,16 @@ function Get-UserDetail {
         $computerName
     )
     $serverArray = @()
+
     try {
+
         # Get the UserName logged onto the server
         $userName = (Get-CimInstance -Class win32_Computersystem -ComputerName $computerName).UserName
 
         # Add the server found to the server Array
         $server = [ordered]@{
             ComputerName = $computerName
-            UserName     = $UserName
+            UserName     = $userName
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
@@ -212,11 +215,13 @@ function Get-WarningsErrors {
 
     $errorOutputArray = @()
     try {
+
         # Check if any security errors or warning was log to the eventlog
         $eventLogTest = Get-EventLog -ComputerName $computerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object { $_.EntryType -like 'Error' -or $_.EntryType -like 'Warning' }
 
         #$eventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
         If ($null -ne $eventLogTest) {
+
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $eventLogTest) {
                 $errorOutput = [ordered]@{
@@ -231,6 +236,7 @@ function Get-WarningsErrors {
             }
         }
         else {
+
             # If no errors where found
             $errorOutput = [ordered]@{
                 ComputerName = $computerName
@@ -273,6 +279,9 @@ function Get-NetworkInfo {
     [Alias()]
     [OutputType([array])]
     Param(
+        [Parameter()]
+        [string]
+        $computerName
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
     )
