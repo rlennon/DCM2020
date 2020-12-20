@@ -344,7 +344,7 @@ function Get-OpenPorts {
         Foreach ($ports in $PortList) {
 
             #BSc DCM 2020 - Fix this
-            $portConnected = Test-NetConnection -ComputerName $ComputerName -Port $port -ErrorAction SilentlyContinue 
+            $portConnected = Test-NetConnection -ComputerName $ComputerName -Port $ports -ErrorAction SilentlyContinue 
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             # check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
