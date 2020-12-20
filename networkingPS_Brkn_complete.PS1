@@ -55,7 +55,8 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Test-NetConnection { #Changed function name to resolve an unnaproved verb error.
+function Test-NetConnection {
+    #Changed function name to resolve an unnaproved verb error.
     Param(
         [Parameter()]
         [string[]]
@@ -163,7 +164,8 @@ function Get-UserDetail {
         }
         $serverArray = New-Object -TypeName PSObject -Property $server
     }
-    catch { # Amended incorrect spelling of the 'catch' function 
+    catch {
+        # Amended incorrect spelling of the 'catch' function 
         $server = [ordered]@{  
             ComputerName = $computerName
             UserName     = "(Get-UserDetail) Server Error: " + $_.Exception.Message + " : " + $_.FullyQualifiedErrorId
@@ -184,7 +186,8 @@ function Get-UserDetail {
 .PARAMETERS
     $ComputerName: A Valid Computer Name or IP Address
 #>
-function Test-WarningsErrors { #Changed function name to an approved verb to resolve unnaproved verb error 
+function Test-WarningsErrors {
+    #Changed function name to an approved verb to resolve unnaproved verb error 
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -204,7 +207,8 @@ function Test-WarningsErrors { #Changed function name to an approved verb to res
         $EventLogTest = Get-EventLog -ComputerName $ComputerName -LogName Security -Before $DateBefore -After $DateAfter | Where-Object { $_.EntryType -like 'Error' -or $_.EntryType -like 'Warning' }
 
         #$EventLogTest = Get-EventLog -LogName System -Newest 5   @TEST
-        If ($null -ne $EventLogTest) { #Moved $null to the left side of the equality comparisons to resolve error.
+        If ($null -ne $EventLogTest) {
+            #Moved $null to the left side of the equality comparisons to resolve error.
             # If Warnings or Errors found, then write it out to the log file
             Foreach ($eventLog in $EventLogTest) {
                 $errorOutput = [ordered]@{
@@ -316,7 +320,8 @@ function Get-NetworkInfo {
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # check-openports function shown below.
-function Test-Openports { #Changed function name to resolve unnaproved verb error
+function Test-Openports {
+    #Changed function name to resolve unnaproved verb error
     [CmdletBinding()]
     [Alias()]
     [OutputType([array])]
@@ -346,9 +351,7 @@ Begin
         # BSc DCM 2020 - fix this
         # We need an iterator here to go through all $ports in $PortList
         # Write in the single line of code to iterate through the port list
-        foreach ($port in $PortList)
-            
-        {
+        foreach ($port in $PortList) {
             
             #BSc DCM 2020 - Fix this
             $portConnected = Test-NetConnection $ComputerName -InformationLevel -Port $port
