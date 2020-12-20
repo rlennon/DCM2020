@@ -1,4 +1,3 @@
-Test 
 <#
 .Synopsis
 Networking Assignment (PowerShell) : Scripting the Deployment Pipeline 
@@ -80,9 +79,10 @@ function Network-Tests
     }    Process
     {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
     #Which command should I use?
-    #  Write-Output $computerNames  
-    #  Write-Host $computerNames
-    # Uncomment the correct one of the above choices!
+
+      Write-Output $computerNames  
+    
+    
 
 
     # Start Process
@@ -312,10 +312,11 @@ function Get-NetworkInfo
 #Region Check-OpenPorts
 <#
 .Synopsis
-   
+   check if ports are open
 .DESCRIPTION
-   
-.PARAMETERS    
+   This function will check if an array of ports are open using cmdlet Test-connection 
+.PARAMETERS 
+   $ComputerNamr: A valid Computer Name or IP Address   
 #>
 
 # BSc DCM - fix this
@@ -343,7 +344,7 @@ function Check-OpenPorts
         {
             
             #BSc DCM 2020 - Fix this
-            # $portConnected =
+            $portConnected = Test-NetConnection
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
