@@ -56,7 +56,7 @@ Network-Tests $computerNames
 .PARAMETERS
    $ServerNames: Pass a list of server names as String Array
 #>
-function Test-NetConnection
+function Test-NetConnection #changed function command
     {
     Param(
      [Parameter()]
@@ -187,7 +187,7 @@ function Get-UserDetail
     
     }
 
-    catch 
+    catch #changed to catch
     
     { 
         $server = [ordered]@{
@@ -352,7 +352,7 @@ function Get-NetworkInfo
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. This comment refers to the 
 # Get-OpenPorts function shown below.
-function Get-OpenPorts
+function Get-OpenPorts #Check changed to Get
 {
     [CmdletBinding()]
     [Alias()]
