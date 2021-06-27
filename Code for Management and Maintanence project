@@ -1,0 +1,51 @@
+PowerShell Migrate VM:
+powershell.exe -command {Set-ExecutionPolicy Bypass -Scope
+Process -Force;
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback
+= { $true }; [Net.ServicePointManager]::SecurityProtocol =
+[Net.SecurityProtocolType]::Tls -bor
+[Net.SecurityProtocolType]::Tls11 -bor
+[Net.SecurityProtocolType]::Tls12; $scriptPath = 
+(New-Object System.Net.WebClient).DownloadString('https://' + '00.00.00.00' + '/resources/uvm/win/esx_setup_uvm.ps1');
+Invoke-Command -ScriptBlock ([scriptblock]::Create($scriptPath)) -ArgumentList
+'00.00.00.00',$true,$true,$true}
+
+Linux Migrate VM:
+curl -sk
+https://00.00.00.00/resources/uvm/linux/esx_setup_uvm.sh |
+sudo sh -x /dev/stdin '00.00.00.00' '$true' '$true' '$true'
+
+Unencrypted VM: CQL
+“From NX.VM where isEncrypted = false”
+
+VM's with no backup: CQL
+From NX.VM WHERE protectiontype = ‘UNPROTECTED’
+
+VM's with no security policy: CQL
+From NX.VM WHERE resourceCount (Category.NetwrokSecurityGroup) = 0 or
+ResourceCount(Category) = 0
+
+LDAP not secure: CQL
+FROM NX.DirectoryService WHERE url does_not_contain ‘ldaps’
+
+VM's allowing all incoming traffic: CQL
+FROM NX.VM WHERE
+Category.NetworkSecurityGroup.AppRule.InboundAllowedGroup.peerSpecificationType = ‘All’
+
+VM's allowing traffic on TCP port 3000: CQL
+FROM NX.VM WHERE
+Category.NetworkSecurityGroup.AppRule.InboundAllowedGroup.IpSubnet.ip contains
+‘0.0.0.0’ AND
+Category.NetwrokSecurityGroup.AppRule.InboundAllowedGroup.TCPPortRange.startPort
+<= 3000 AND
+Category.NetworkSecurityGroup.AppRule.InboundAllowed.TCPPortRange.endPort
+>=3000
+
+VM's allowing traffic on TCP port 5432: CQL
+FROM NX.VM WHERE
+Category.NetworkSecurityGroup.AppRule.InboundAllowedGroup.IpSubnet.ip contains
+‘0.0.0.0’ AND
+Category.NetwrokSecurityGroup.AppRule.InboundAllowedGroup.TCPPortRange.startPort
+<= 5432 AND
+Category.NetworkSecurityGroup.AppRule.InboundAllowed.TCPPortRange.endPort
+>= 5432
